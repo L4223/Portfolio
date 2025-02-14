@@ -16,6 +16,7 @@
 		"@riadh-adrani/utils": "^1.0.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.6",
+		"@sveltejs/adapter-vercel": "^5.6.1",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@types/eslint": "^9.6.0",
@@ -52,6 +53,7 @@
 		"@threlte/core": "^8.0.1",
 		"@threlte/extras": "^9.0.1",
 		"@types/three": "^0.172.0",
-		"three": "^0.172.0"
+		"three": "^0.172.0",
+		"vercel": "^41.1.3"
 	}
 }

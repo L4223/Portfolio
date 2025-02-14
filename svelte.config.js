@@ -1,26 +1,16 @@
-import adapter from '@sveltejs/adapter-static';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-
-const base = '/Portfolio'; // Repo-Name als Base-Pfad für GitHub Pages
+import adapter from '@sveltejs/adapter-vercel';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
     preprocess: vitePreprocess(),
 
     kit: {
-        adapter: adapter({
-            pages: 'build', // Setzt das Build-Verzeichnis auf /build
-            assets: 'build', // Setzt das Assets-Verzeichnis auf /build
-            fallback: '404.html' // Notwendig für SPA-Routing
-        }),
+        adapter: adapter(),
         paths: {
-            base: process.env.NODE_ENV === 'production' ? base : ''
+            base: '' // Entferne den Base-Pfad, da Vercel dies nicht benötigt
         },
-        appDir: 'app',
-		prerender: {
-			entries: ['*'] // Stellt sicher, dass alle statischen Dateien erfasst werden
-		}
-		
+        appDir: 'app'
     }
 };
 
