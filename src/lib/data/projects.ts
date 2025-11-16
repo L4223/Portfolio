@@ -43,10 +43,11 @@ const items: Array<Project> = [
 		links: [
 			{ to: 'https://github.com/L4223/BigSpeechVR', label: 'GitHub Repository' }
 		],
-		logo: Assets.Unknown,
+		logo: Assets.BigSpeechVR,
 		name: 'Big Speech VR',
 		period: {
-			from: new Date(2024, 0, 1)
+			from: new Date(2024, 0, 1),
+			to: new Date(2024, 3, 15)	
 		},
 		skills: getSkills('unity', 'c#', 'vr', 'ai', 'pulstracking', 'voicetracking'),
 		type: 'VR-Anwendung'
@@ -61,12 +62,13 @@ const items: Array<Project> = [
 		links: [
 			{ to: 'https://github.com/', label: 'GitHub Repository' }
 		],
-		logo: Assets.Unknown,
+		logo: Assets.SchoolXR,
 		name: 'Bachelor Thesis WebXR',
 		period: {
-			from: new Date(2025, 1, 3)
+			from: new Date(2025, 3, 1),
+			to: new Date(2025, 5, 31)
 		},
-		skills: getSkills('webxr', 'javascript', 'three.js', 'lms-integration', 'hcd', 'design-thinking'),
+		skills: getSkills('webxr', 'js', 'nextjs'),
 		type: 'Forschungsprojekt'
 	},
 									{
@@ -96,8 +98,8 @@ const items: Array<Project> = [
 		logo: Assets.FHWave,
 		name: 'FH-Wave App',
 		period: {
-			from: new Date(2023, 8, 1),
-			to: new Date(2024, 2, 1)
+			from: new Date(2023, 9, 1),
+			to: new Date(2024, 1, 1)
 		},
 		skills: getSkills('flutter', 'firebase', 'git', 'figma', 'scrum', 'full-stack'),
 		type: 'Full-Stack-Anwendung'

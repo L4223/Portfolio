@@ -47,7 +47,7 @@ const items: Array<Experience> = [
 		name: 'Social Media-Manager',
 		color: 'green',
 		links: [],
-		logo: Assets.Unknown,
+		logo: Assets.DritterOrt,
 		shortDescription: 'Corporate Social Media Management.'
 	},
 	{

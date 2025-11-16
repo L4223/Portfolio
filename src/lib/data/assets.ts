@@ -7,6 +7,11 @@ const asset = (lightFilename: string, darkFilename = lightFilename) => {
 };
 
 const Assets = {
+	NextJS: asset('nextjs.png'),
+	SchoolXR: asset('schoolxr.png'),
+	BigSpeechVR: asset('bigspeechvr.png'),
+	GYMAHZ: asset('gymahz.png'),
+	FH: asset('fh.png'),
 	AWS: asset('aws.svg'),
 	Bootstrap: asset('bootstrap.svg'),
 	C: asset('c.svg'),
