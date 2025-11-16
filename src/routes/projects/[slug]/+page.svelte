@@ -4,18 +4,23 @@
 	import FancyBanner from '$lib/components/common/fancy-banner/fancy-banner.svelte';
 	import EmptyMarkdown from '$lib/components/common/markdown/empty-markdown.svelte';
 	import ScreenshotCard from '$lib/components/common/screenshot/screenshot-card.svelte';
-	import Badge from '$lib/components/ui/badge/badge.svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import H1 from '$lib/components/ui/typography/h1.svelte';
-	import Muted from '$lib/components/ui/typography/muted.svelte';
-	import Assets from '$lib/data/assets';
-	import type { Project } from '$lib/data/types';
-	import { computeExactDuration, getMonthAndYear, href } from '$lib/utils';
-	import { mode } from 'mode-watcher';
+        import Badge from '$lib/components/ui/badge/badge.svelte';
+        import Separator from '$lib/components/ui/separator/separator.svelte';
+        import H1 from '$lib/components/ui/typography/h1.svelte';
+        import Muted from '$lib/components/ui/typography/muted.svelte';
+        import Assets from '$lib/data/assets';
+        import ProjectsData from '$lib/data/projects';
+        import { translate, type LocalizedString } from '$lib/i18n';
+        import { language } from '$lib/stores/language';
+        import UiText from '$lib/data/ui';
+        import type { Project } from '$lib/data/types';
+        import { computeExactDuration, getMonthAndYear, href } from '$lib/utils';
+        import { mode } from 'mode-watcher';
 
-	let { data }: { data: { item?: Project } } = $props();
+        let { data }: { data: { item?: Project } } = $props();
 
-	let title = $derived(`${data?.item?.name ?? 'Not Found'} - Skills`);
+        const notFound: LocalizedString = { de: 'Nicht gefunden', en: 'Not found' };
+        let title = $derived(`${data?.item?.name ?? translate(notFound, $language)} - ${$ProjectsData.title}`);
 	let banner = $derived(
 		($mode == 'dark' ? data?.item?.logo.dark : data.item?.logo.light) ?? Assets.Unknown.light
 	);
@@ -68,7 +73,7 @@
 		<Separator />
 		<div class="flex flex-col gap-2 px-4 pt-4">
 			{#if data.item.screenshots && data.item.screenshots.length > 0}
-				<Muted>Screenshots</Muted>
+                                <Muted>{$UiText.screenshots}</Muted>
 				<div class="grid grid-cols-1 gap-2 py-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 					{#each data.item.screenshots as img, index (index)}
 						<ScreenshotCard item={img} />

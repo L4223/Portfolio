@@ -7,10 +7,10 @@
 
 	let search = $state('');
 
-	let result = $derived(
-		ExperienceData.items.filter(
-			(it) =>
-				it.name.toLowerCase().includes(search.toLowerCase()) ||
+        let result = $derived(
+                $ExperienceData.items.filter(
+                        (it) =>
+                                it.name.toLowerCase().includes(search.toLowerCase()) ||
 				it.company.toLowerCase().includes(search.toLowerCase()) ||
 				it.description.toLowerCase().includes(search)
 		)
@@ -19,7 +19,7 @@
 	const onSearch = (query: string) => (search = query);
 </script>
 
-<SearchPage title={ExperienceData.title} {onSearch}>
+<SearchPage title={$ExperienceData.title} {onSearch}>
 	{#if result.length === 0}
 		<EmptyResult />
 	{:else}

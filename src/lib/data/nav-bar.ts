@@ -1,19 +1,30 @@
+import { translate, type LocalizedString } from '$lib/i18n';
+import { language } from '$lib/stores/language';
+import { derived } from 'svelte/store';
 import BaseData from './base';
 
-const left = { title: BaseData.fullName, icon: 'i-carbon-code' } as const;
+type NavBarItem = {
+        title: LocalizedString;
+        icon: `i-carbon-${string}`;
+        href: string;
+};
 
-const items: Array<{
-	title: string;
-	icon: `i-carbon-${string}`;
-	href: string;
-}> = [
-	{ title: 'Skills', icon: 'i-carbon-assembly-cluster', href: '/skills' },
-	{ title: 'Projekte', icon: 'i-carbon-cube', href: '/projects' },
-	{ title: 'Erfahrung', icon: 'i-carbon-development', href: '/experience' },
-	{ title: 'Bildung', icon: 'i-carbon-education', href: '/education' },
-	{ title: 'Lebenslauf', icon: 'i-carbon-document', href: '/resume' }
+const left = { title: { de: BaseData.fullName, en: BaseData.fullName } as LocalizedString, icon: 'i-carbon-code' } as const;
+
+const items: Array<NavBarItem> = [
+        { title: { de: 'Skills', en: 'Skills' }, icon: 'i-carbon-assembly-cluster', href: '/skills' },
+        { title: { de: 'Projekte', en: 'Projects' }, icon: 'i-carbon-cube', href: '/projects' },
+        { title: { de: 'Erfahrung', en: 'Experience' }, icon: 'i-carbon-development', href: '/experience' },
+        { title: { de: 'Bildung', en: 'Education' }, icon: 'i-carbon-education', href: '/education' },
+        { title: { de: 'Lebenslauf', en: 'Resume' }, icon: 'i-carbon-document', href: '/resume' }
 ];
 
-const NavBarData = { left, items };
+const NavBarData = derived(language, ($language) => ({
+        left: { title: translate(left.title, $language), icon: left.icon },
+        items: items.map((item) => ({
+                ...item,
+                title: translate(item.title, $language)
+        }))
+}));
 
 export default NavBarData;

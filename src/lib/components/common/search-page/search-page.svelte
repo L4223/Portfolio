@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Input from '$lib/components/ui/input/input.svelte';
-	import { onMount, type Snippet } from 'svelte';
+        import { onMount, type Snippet } from 'svelte';
+        import UiText from '$lib/data/ui';
 	import TitledPage from '../titled-page/titled-page.svelte';
 
 	let {
@@ -38,6 +39,6 @@
 </script>
 
 <TitledPage {title}>
-	<Input placeholder="Search..." bind:value={query} />
-	{@render children()}
+        <Input placeholder={$UiText.searchPlaceholder} bind:value={query} />
+        {@render children()}
 </TitledPage>

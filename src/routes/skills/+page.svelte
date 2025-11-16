@@ -6,9 +6,10 @@
 	import FancyCard from '$lib/components/ui/card/fancy-card.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import Muted from '$lib/components/ui/typography/muted.svelte';
-	import SkillsData, { groupByCategory } from '$lib/data/skills';
-	import { href } from '$lib/utils';
-	import { mode } from 'mode-watcher';
+        import SkillsData, { groupByCategory } from '$lib/data/skills';
+        import { language } from '$lib/stores/language';
+        import { href } from '$lib/utils';
+        import { mode } from 'mode-watcher';
 
 	let query = $state('');
 
@@ -16,10 +17,10 @@
 		query = value;
 	}
 
-	const groups = $derived(groupByCategory(query));
+        const groups = $derived(groupByCategory($language, $SkillsData.items, query));
 </script>
 
-<SearchPage title={SkillsData.title} {onSearch}>
+<SearchPage title={$SkillsData.title} {onSearch}>
 	{#if groups.length === 0}
 		<EmptyResult />
 	{:else}
