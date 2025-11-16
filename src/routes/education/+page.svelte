@@ -7,10 +7,10 @@
 
 	let search = $state('');
 
-	let result = $derived(
-		EducationData.items.filter(
-			(it) =>
-				it.name.toLowerCase().includes(search.toLowerCase()) ||
+        let result = $derived(
+                $EducationData.items.filter(
+                        (it) =>
+                                it.name.toLowerCase().includes(search.toLowerCase()) ||
 				it.description.toLowerCase().includes(search) ||
 				it.location.toLowerCase().includes(search) ||
 				it.degree.toLowerCase().includes(search) ||
@@ -21,7 +21,7 @@
 	const onSearch = (query: string) => (search = query);
 </script>
 
-<SearchPage title={EducationData.title} {onSearch}>
+<SearchPage title={$EducationData.title} {onSearch}>
 	{#if result.length === 0}
 		<EmptyResult />
 	{:else}

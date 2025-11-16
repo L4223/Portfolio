@@ -5,19 +5,20 @@
 	import AvatarImage from '$lib/components/ui/avatar/avatar-image.svelte';
 	import Avatar from '$lib/components/ui/avatar/avatar.svelte';
 	import { CardContent, CardTitle } from '$lib/components/ui/card';
-	import FancyCard from '$lib/components/ui/card/fancy-card.svelte';
-	import Icon from '$lib/components/ui/icon/icon.svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
-	import Large from '$lib/components/ui/typography/large.svelte';
-	import Assets from '$lib/data/assets';
-	import { NAMED_COLORS } from '$lib/data/colors';
-	import EducationData from '$lib/data/education';
-	import ExperienceData from '$lib/data/experience';
-	import ProjectsData from '$lib/data/projects';
-	import SkillsData from '$lib/data/skills';
-	import { href } from '$lib/utils';
-	import { mode } from 'mode-watcher';
+        import FancyCard from '$lib/components/ui/card/fancy-card.svelte';
+        import Icon from '$lib/components/ui/icon/icon.svelte';
+        import Separator from '$lib/components/ui/separator/separator.svelte';
+        import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
+        import Large from '$lib/components/ui/typography/large.svelte';
+        import UiText from '$lib/data/ui';
+        import Assets from '$lib/data/assets';
+        import { NAMED_COLORS } from '$lib/data/colors';
+        import EducationData from '$lib/data/education';
+        import ExperienceData from '$lib/data/experience';
+        import ProjectsData from '$lib/data/projects';
+        import SkillsData from '$lib/data/skills';
+        import { href } from '$lib/utils';
+        import { mode } from 'mode-watcher';
 
 	type Item = {
 		name: string;
@@ -35,67 +36,67 @@
 	let search = $state('');
 
 	const getResult = (q: string): Array<Group> => {
-		const skills = SkillsData.items.filter((it) => it.name.toLowerCase().includes(q.toLowerCase()));
-		const projects = ProjectsData.items.filter((it) =>
-			it.name.toLowerCase().includes(q.toLowerCase())
-		);
-		const experience = ExperienceData.items.filter((it) =>
-			it.name.toLowerCase().includes(q.toLowerCase())
-		);
-		const education = EducationData.items.filter((it) =>
-			it.name.toLowerCase().includes(q.toLowerCase())
-		);
+                const skills = $SkillsData.items.filter((it) => it.name.toLowerCase().includes(q.toLowerCase()));
+                const projects = $ProjectsData.items.filter((it) =>
+                        it.name.toLowerCase().includes(q.toLowerCase())
+                );
+                const experience = $ExperienceData.items.filter((it) =>
+                        it.name.toLowerCase().includes(q.toLowerCase())
+                );
+                const education = $EducationData.items.filter((it) =>
+                        it.name.toLowerCase().includes(q.toLowerCase())
+                );
 
 		const groups: Array<Group> = [];
 
 		if (skills.length) {
 			groups.push({
-				icon: 'i-carbon-assembly-cluster',
-				name: 'Skills',
-				items: skills.map((it) => ({
-					name: it.name,
-					logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
+                                icon: 'i-carbon-assembly-cluster',
+                                name: $SkillsData.title,
+                                items: skills.map((it) => ({
+                                        name: it.name,
+                                        logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
 					link: `/skills/${it.slug}`,
 					color: it.color
-				}))
-			});
-		}
+                                }))
+                        });
+                }
 
 		if (projects.length) {
 			groups.push({
-				icon: 'i-carbon-cube',
-				name: 'Projects',
-				items: projects.map((it) => ({
-					name: it.name,
-					logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
+                                icon: 'i-carbon-cube',
+                                name: $ProjectsData.title,
+                                items: projects.map((it) => ({
+                                        name: it.name,
+                                        logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
 					link: `/projects/${it.slug}`,
 					color: it.color
-				}))
-			});
-		}
+                                }))
+                        });
+                }
 
 		if (experience.length) {
 			groups.push({
-				icon: 'i-carbon-development',
-				name: 'Experience',
-				items: experience.map((it) => ({
-					name: it.name,
-					logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
+                                icon: 'i-carbon-development',
+                                name: $ExperienceData.title,
+                                items: experience.map((it) => ({
+                                        name: it.name,
+                                        logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
 					link: `/experience/${it.slug}`,
 					color: it.color
-				}))
-			});
-		}
+                                }))
+                        });
+                }
 
 		if (education.length) {
 			groups.push({
-				icon: 'i-carbon-education',
-				name: 'Education',
-				items: education.map((it) => ({
-					name: it.degree,
-					logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
-					link: `/education/${it.slug}`,
-					color: NAMED_COLORS.gray
+                                icon: 'i-carbon-education',
+                                name: $EducationData.title,
+                                items: education.map((it) => ({
+                                        name: it.degree,
+                                        logo: $mode === 'dark' ? it.logo.dark : it.logo.light,
+                                        link: `/education/${it.slug}`,
+                                        color: NAMED_COLORS.gray
 				}))
 			});
 		}
@@ -103,12 +104,12 @@
 		return groups;
 	};
 
-	let result = $derived(getResult(search));
+        let result = $derived(getResult(search));
 
-	const onSearch = (query: string) => (search = query);
+        const onSearch = (query: string) => (search = query);
 </script>
 
-<SearchPage title="Search" {onSearch}>
+<SearchPage title={$UiText.search} {onSearch}>
 	{#if result.length === 0}
 		<EmptyResult />
 	{:else}
