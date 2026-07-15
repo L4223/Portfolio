@@ -54,6 +54,7 @@
 		"@threlte/core": "^8.0.1",
 		"@threlte/extras": "^9.0.1",
 		"@types/three": "^0.172.0",
+		"pdfjs-dist": "^6.1.200",
 		"three": "^0.172.0",
 		"vercel": "^41.1.3"
 	}

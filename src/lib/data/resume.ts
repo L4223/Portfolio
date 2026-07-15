@@ -5,7 +5,7 @@ import { href } from '$lib/utils';
 
 const title: LocalizedString = { de: 'Lebenslauf', en: 'Resume' };
 
-const resume = href('/pdf/resume.pdf');
+const resume = href('/pdf/Lebenslauf_Lasse_Knodt.pdf');
 
 const ResumeData = derived(language, ($language) => ({ title: translate(title, $language), resume }));
 

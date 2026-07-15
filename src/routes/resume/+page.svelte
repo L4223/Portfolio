@@ -1,13 +1,19 @@
 <script>
-        import TitledPage from '$lib/components/common/titled-page/titled-page.svelte';
-        import Button from '$lib/components/ui/button/button.svelte';
-        import ResumeData from '$lib/data/resume';
-        import UiText from '$lib/data/ui';
+	import PdfPreview from '$lib/components/common/pdf-preview/pdf-preview.svelte';
+	import TitledPage from '$lib/components/common/titled-page/titled-page.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import ResumeData from '$lib/data/resume';
+	import UiText from '$lib/data/ui';
 </script>
 
 <TitledPage title={$ResumeData.title}>
-        <a href={$ResumeData.resume} class="mx-auto">
-                <Button>{$UiText.download}</Button>
-        </a>
-        <iframe src={$ResumeData.resume} class="h-full w-full" title={$ResumeData.title}></iframe>
+	<div class="flex w-full justify-center">
+		<a href={$ResumeData.resume} download class="inline-flex">
+			<Button>{$UiText.download}</Button>
+		</a>
+	</div>
+
+	<div class="mx-auto w-full max-w-5xl">
+		<PdfPreview src={$ResumeData.resume} title={$ResumeData.title} />
+	</div>
 </TitledPage>
