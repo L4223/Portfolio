@@ -86,9 +86,7 @@ const items: Array<LocalizedProject> = [
                         de: 'VR-gestützter Präsentationstrainer mit interaktivem Feedbacksystem.',
                         en: 'VR presentation trainer with interactive feedback.'
                 },
-                links: [
-                        { to: 'https://github.com/L4223/BigSpeechVR', label: 'GitHub Repository' }
-                ],
+                links: [],
                 logo: Assets.BigSpeechVR,
                 name: { de: 'Big Speech VR', en: 'Big Speech VR' },
                 period: {
@@ -110,7 +108,7 @@ const items: Array<LocalizedProject> = [
                         en: 'Interactive WebXR classroom experience with LMS integration.'
                 },
                 links: [
-                        { to: 'https://github.com/', label: 'GitHub Repository' }
+                        { to: 'https://github.com/L4223/SchoolXR_Prototype', label: 'GitHub Repository' }
                 ],
                 logo: Assets.SchoolXR,
                 name: { de: 'Bachelor Thesis WebXR', en: 'Bachelor Thesis WebXR' },
@@ -163,7 +161,8 @@ const items: Array<LocalizedProject> = [
                         en: 'Full-stack app to support student life at FH Kiel, built with Scrum and modern tooling.'
                 },
                 links: [
-                        { to: 'https://github.com/L4223/FH-Wave', label: 'GitHub Repository' }
+                        { to: 'https://l4223.github.io/FH-Wave-Demo/', label: 'Live-Demo' },
+                        { to: 'https://github.com/L4223/FH-Wave-Demo', label: 'GitHub Repository' }
                 ],
                 logo: Assets.FHWave,
                 name: { de: 'FH-Wave App', en: 'FH-Wave App' },
