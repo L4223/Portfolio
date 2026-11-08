@@ -4,7 +4,6 @@ import { translate, type LocalizedString } from '$lib/i18n';
 import { language as languageStore, type Language } from '$lib/stores/language';
 import { derived } from 'svelte/store';
 import Assets from './assets';
-import svelteMd from './md/svelte.md?raw';
 import type { Skill, SkillCategory } from './types';
 
 type LocalizedCategory<S extends string = string> = Omit<SkillCategory<S>, 'name'> & { name: LocalizedString };
@@ -143,10 +142,46 @@ const items = [
         defineSkill({
                 slug: 'svelte',
                 color: 'orange',
-                description: { de: svelteMd, en: svelteMd },
+                description: {
+                        de: 'Svelte ist ein Compiler-basiertes UI-Framework. Dieses Portfolio ist mit SvelteKit und Svelte 5 gebaut.',
+                        en: 'Svelte is a compiler-based UI framework. This portfolio is built with SvelteKit and Svelte 5.'
+                },
                 logo: Assets.Svelte,
                 name: { de: 'Svelte', en: 'Svelte' },
                 category: 'frontend'
+        }),
+        defineSkill({
+                slug: 'tailwind',
+                color: 'cyan',
+                description: {
+                        de: 'Tailwind CSS ist ein Utility-First-CSS-Framework. Ich nutze es in fast allen Web-Projekten, von Flut.digital über SchoolXR bis zu diesem Portfolio.',
+                        en: 'Tailwind CSS is a utility-first CSS framework. I use it in almost every web project, from Flut.digital and SchoolXR to this portfolio.'
+                },
+                logo: Assets.Tailwind,
+                name: { de: 'Tailwind CSS', en: 'Tailwind CSS' },
+                category: 'frontend'
+        }),
+        defineSkill({
+                slug: 'dart',
+                color: 'blue',
+                description: {
+                        de: 'Dart ist die Programmiersprache hinter Flutter.',
+                        en: 'Dart is the programming language behind Flutter.'
+                },
+                logo: Assets.Dart,
+                name: { de: 'Dart', en: 'Dart' },
+                category: 'programming'
+        }),
+        defineSkill({
+                slug: 'express',
+                color: 'gray',
+                description: {
+                        de: 'Express ist ein schlankes Web-Framework für Node.js. In SchoolXR stellt es die API und den LTI-1.3-Provider bereit.',
+                        en: 'Express is a minimal web framework for Node.js. In SchoolXR it serves the API and the LTI 1.3 provider.'
+                },
+                logo: Assets.ExpressJs,
+                name: { de: 'Express', en: 'Express' },
+                category: 'backend'
         }),
         defineSkill({
                 slug: 'flutter',
@@ -301,8 +336,30 @@ const items = [
                         en: 'Artificial intelligence concepts applied in projects.'
                 },
                 logo: Assets.Python,
-                name: { de: 'AI', en: 'AI' },
+                name: { de: 'KI / LLMs', en: 'AI / LLMs' },
                 category: 'programming'
+        }),
+        defineSkill({
+                slug: 'blender',
+                color: 'orange',
+                description: {
+                        de: 'Blender ist eine Open-Source-Software für 3D-Modellierung, Animation und Rendering.',
+                        en: 'Blender is open-source software for 3D modelling, animation and rendering.'
+                },
+                logo: Assets.Blender,
+                name: { de: 'Blender', en: 'Blender' },
+                category: 'game-3d'
+        }),
+        defineSkill({
+                slug: 'body-tracking',
+                color: 'purple',
+                description: {
+                        de: 'Erfassen von Körperbewegungen, z. B. mit der Kinect Azure, und Weitergabe der Daten per OSC an andere Programme.',
+                        en: 'Capturing body movement, e.g. with the Kinect Azure, and passing the data to other programs via OSC.'
+                },
+                logo: Assets.Unknown,
+                name: { de: 'Body-Tracking', en: 'Body Tracking' },
+                category: 'game-3d'
         }),
         defineSkill({
                 slug: 'pulse-tracking',

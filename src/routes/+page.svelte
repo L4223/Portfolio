@@ -14,7 +14,13 @@
         import RotatingModel from '$lib/components/3d/RotatingModel.svelte';
         import { Canvas } from '@threlte/core';
 
-        const greeting: LocalizedString = { de: 'Moin!', en: 'Hello!' };
+        const greeting: LocalizedString = { de: 'Moin, ich bin Lasse!', en: "Hi, I'm Lasse!" };
+        const role: LocalizedString = {
+                de: 'Frontend- & Fullstack-Entwickler · WebXR · KI-Integration',
+                en: 'Frontend & full-stack developer · WebXR · AI integration'
+        };
+        const ctaProjects: LocalizedString = { de: 'Projekte ansehen', en: 'View projects' };
+        const ctaResume: LocalizedString = { de: 'Lebenslauf', en: 'Resume' };
 </script>
 
 <Title title={$HomeData.title} />
@@ -26,10 +32,15 @@
                         class="content-container flex flex-col items-center justify-center gap-4 text-center md:items-start md:text-left"
                 >
                         <H1>{translate(greeting, $language)}</H1>
-                        <Muted>{$HomeData.hero.description}</Muted>
+                        <p class="text-lg font-medium">{translate(role, $language)}</p>
+                        <Muted className="max-w-[560px]">{$HomeData.hero.description}</Muted>
+                        <div class="flex flex-row flex-wrap justify-center gap-2 md:justify-start">
+                                <a href={href('/projects')}><Button>{translate(ctaProjects, $language)}</Button></a>
+                                <a href={href('/resume')}><Button variant="outline">{translate(ctaResume, $language)}</Button></a>
+                        </div>
                         <div class="flex flex-row gap-1">
                                 {#each $HomeData.hero.links as item}
-                                        <a href={item.href} target="_blank">
+                                        <a href={item.href} target="_blank" rel="noopener" aria-label={item.label}>
                                                 <Tooltip>
                                                         <TooltipTrigger>
 								<Button variant="outline" size="icon">
@@ -84,7 +95,7 @@
 		justify-content: center;
 		align-items: center; */
 		width: 300px;
-		height: 700px;
+		height: min(700px, 60vh);
 	}
 
 	/* Ensures content remains in front of the canvas */

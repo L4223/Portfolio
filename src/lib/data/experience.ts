@@ -21,21 +21,31 @@ const items: Array<LocalizedExperience> = [
                 slug: 'dataport-bachelor',
                 company: 'Dataport AöR',
                 description: {
-                        de: 'Bachelor-Student im Bereich Virtual Reality (VR) und WebGL.',
-                        en: 'Bachelor student focusing on Virtual Reality (VR) and WebGL.'
+                        de: `<p>Bachelorarbeit in Kooperation mit Dataport: Konzeption, Entwicklung und Evaluation von <a href="/projects/schoolxr">SchoolXR</a>, einem webbasierten Werkzeug, mit dem Lehrkräfte 3D-Modelle mit Hotspots und Aufgaben verbinden.</p>
+<ul>
+<li>Nutzerzentriertes Vorgehen: Interviews, Personas, Papierprototypen und Usability-Tests mit Lehrkräften</li>
+<li>React-Frontend mit &lt;model-viewer&gt; (WebGL/AR) und Express-Backend mit MongoDB</li>
+<li>Anbindung an Lernplattformen wie Moodle und die dBildungscloud über LTI 1.3</li>
+</ul>`,
+                        en: `<p>Bachelor thesis in cooperation with Dataport: concept, development and evaluation of <a href="/projects/schoolxr">SchoolXR</a>, a web-based tool that lets teachers attach hotspots and tasks to 3D models.</p>
+<ul>
+<li>Human-centred process: interviews, personas, paper prototypes and usability tests with teachers</li>
+<li>React front end with &lt;model-viewer&gt; (WebGL/AR) and an Express back end with MongoDB</li>
+<li>Integration with learning platforms such as Moodle and the dBildungscloud via LTI 1.3</li>
+</ul>`
                 },
                 contract: ContractType.Internship,
                 type: { de: 'XR Entwicklung', en: 'XR Development' },
                 location: { de: 'Altenholz, Schleswig-Holstein, Deutschland', en: 'Altenholz, Schleswig-Holstein, Germany' },
-                period: { from: new Date(2024, 11, 1) },
-                skillSlugs: ['vr', 'webgl'],
-                name: { de: 'Bachelor-Student', en: 'Bachelor Student' },
+                period: { from: new Date(2024, 11, 1), to: new Date(2025, 6, 31) },
+                skillSlugs: ['webxr', 'webgl', 'reactjs', 'nodejs', 'mongo'],
+                name: { de: 'Bachelor-Praktikum', en: 'Bachelor Internship' },
                 color: 'red',
                 links: [],
                 logo: Assets.Dataport,
                 shortDescription: {
-                        de: 'Bachelor-Student im Bereich VR und WebGL.',
-                        en: 'Bachelor student working with VR and WebGL.'
+                        de: 'Bachelorarbeit: SchoolXR – 3D-Lerninhalte im Browser mit LTI-Anbindung.',
+                        en: 'Bachelor thesis: SchoolXR – 3D learning content in the browser with LTI integration.'
                 }
         },
         {
@@ -118,7 +128,7 @@ const items: Array<LocalizedExperience> = [
         },
         {
                 slug: 'bayer-it-intern',
-                company: 'Bayer',
+                company: 'KVP Pharma+Veterinär Produkte GmbH',
                 description: {
                         de: 'Praktikum im Bereich IT mit Schwerpunkt technischer Support und IT-Infrastruktur.',
                         en: 'IT internship focused on technical support and IT infrastructure.'

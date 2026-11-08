@@ -12,6 +12,7 @@
 	} from '$lib/components/ui/dialog';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import type { Screenshot } from '$lib/data/types';
+	import UiText from '$lib/data/ui';
 
 	const { item }: { item: Screenshot } = $props();
 </script>
@@ -19,7 +20,7 @@
 <Dialog>
 	<DialogTrigger>
 		<Card
-			class="flex aspect-square flex-col justify-end bg-cover bg-center bg-no-repeat"
+			class="flex aspect-square flex-col justify-end bg-cover bg-top bg-no-repeat"
 			style={`background-image:url("${item.src}")`}
 		>
 			<Separator />
@@ -31,12 +32,12 @@
 	<DialogContent class="flex min-h-[70%] min-w-[70%] flex-col">
 		<DialogTitle>{item.label}</DialogTitle>
 		<div
-			class="flex-1 bg-cover bg-center bg-no-repeat"
+			class="flex-1 bg-contain bg-center bg-no-repeat"
 			style={`background-image: url("${item.src}")`}
 		></div>
 		<DialogFooter>
 			<DialogClose>
-				<Button>Close</Button>
+				<Button>{$UiText.close}</Button>
 			</DialogClose>
 		</DialogFooter>
 	</DialogContent>
