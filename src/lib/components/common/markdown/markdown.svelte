@@ -35,4 +35,4 @@
 	$: if (mounted) render(content);
 </script>
 
-<div bind:this={container} class="markdown-container p-4"></div>
+<div bind:this={container} class="markdown-container project-content"></div>
