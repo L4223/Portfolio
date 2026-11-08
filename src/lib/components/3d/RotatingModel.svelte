@@ -73,12 +73,12 @@
 
 	<GLTF url={`${base}/models/original/me.glb`} />
 {:else}
-	<T.PerspectiveCamera makeDefault position={[0, 0.46, 3.4]} fov={24}>
+	<T.PerspectiveCamera makeDefault position={[0, 0.12, 5.2]} fov={24}>
 		<OrbitControls
 			enableDamping
 			enableZoom={false}
 			enablePan={false}
-			target={[0, 0.38, 0]}
+			target={[0, 0.02, 0]}
 			minPolarAngle={1.25}
 			maxPolarAngle={1.75}
 			minAzimuthAngle={-0.8}

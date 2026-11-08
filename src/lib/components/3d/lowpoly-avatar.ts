@@ -4,8 +4,7 @@
  * fingers, physically based materials with flat shading and muted colours.
  *
  * Looks are based on a reference photo (short brown hair pushed up, fair skin,
- * ears that stick out a little) and the old 3D scan (grey hoodie, black cap
- * with a purple logo).
+ * ears that stick out a little) and the old 3D scan (grey hoodie).
  */
 import * as THREE from 'three';
 
@@ -30,8 +29,6 @@ const C = {
 	jeans: '#3d4b63',
 	shoe: '#e7e6ea',
 	sole: '#3a3a44',
-	cap: '#1c1c22',
-	accent: '#8b5cf6',
 	device: '#2c2c35',
 	visor: '#7b8cff',
 	string: '#ececf1'
@@ -91,22 +88,29 @@ const group = (position: [number, number, number] = [0, 0, 0], ...children: Arra
 // ---------------------------------------------------------------- body parts
 
 const buildHand = (side: number) => {
+	// relaxed hand: palm faces the thigh (towards the body), thumb in front
 	const hand = new THREE.Group();
-	hand.add(mesh(new THREE.BoxGeometry(0.068, 0.082, 0.028), C.skin, { position: [0, -0.045, 0] }));
-	const lengths = [0.058, 0.066, 0.063, 0.052];
+	const inward = -side;
+	hand.add(
+		mesh(new THREE.BoxGeometry(0.026, 0.08, 0.066), C.skin, {
+			position: [0, -0.044, 0],
+			rotation: [0, 0, inward * -0.08]
+		})
+	);
+	const lengths = [0.06, 0.066, 0.062, 0.05]; // index (front) to little finger (back)
 	lengths.forEach((length, i) => {
-		const x = (-0.0255 + i * 0.017) * side;
 		hand.add(
-			mesh(new THREE.BoxGeometry(0.015, length, 0.016), C.skin, {
-				position: [x, -0.086 - length / 2, 0.004],
-				rotation: [0.18, 0, (i - 1.5) * 0.06 * side]
+			mesh(new THREE.BoxGeometry(0.016, length, 0.015), C.skin, {
+				position: [inward * 0.004, -0.084 - length / 2, 0.024 - i * 0.016],
+				// fingers curl slightly towards the palm
+				rotation: [0, 0, inward * -0.22]
 			})
 		);
 	});
 	hand.add(
-		mesh(new THREE.BoxGeometry(0.017, 0.048, 0.018), C.skin, {
-			position: [-side * 0.04, -0.05, 0.014],
-			rotation: [0.3, 0, side * 0.75]
+		mesh(new THREE.BoxGeometry(0.017, 0.05, 0.018), C.skin, {
+			position: [inward * 0.01, -0.052, 0.04],
+			rotation: [-0.55, 0, inward * -0.25]
 		})
 	);
 	return hand;
@@ -115,7 +119,7 @@ const buildHand = (side: number) => {
 const buildArm = (side: number, shoulderY: number, top: 'tee' | 'hoodie') => {
 	const U = 0.29;
 	const F = 0.26;
-	const shoulder = group([side * 0.205, shoulderY, 0]);
+	const shoulder = group([side * 0.172, shoulderY, 0]);
 	const elbow = group([0, -U, 0]);
 	const wrist = group([0, -F, 0]);
 
@@ -126,9 +130,9 @@ const buildArm = (side: number, shoulderY: number, top: 'tee' | 'hoodie') => {
 					[0, -U - 0.01],
 					[0.039, -U],
 					[0.047, -U * 0.6],
-					[0.052, -0.08],
-					[0.05, 0],
-					[0, 0.035]
+					[0.05, -0.1],
+					[0.046, -0.04],
+					[0, -0.02]
 				]),
 				C.skin
 			)
@@ -138,10 +142,10 @@ const buildArm = (side: number, shoulderY: number, top: 'tee' | 'hoodie') => {
 			mesh(
 				lathe([
 					[0.064, -0.15],
-					[0.068, -0.06],
-					[0.064, 0.0],
-					[0.04, 0.045],
-					[0, 0.05]
+					[0.07, -0.07],
+					[0.072, -0.01],
+					[0.064, 0.03],
+					[0.04, 0.05]
 				]),
 				C.tee,
 				{ double: true }
@@ -168,10 +172,11 @@ const buildArm = (side: number, shoulderY: number, top: 'tee' | 'hoodie') => {
 					[0.055, -U],
 					[0.062, -U * 0.55],
 					[0.068, -0.06],
-					[0.062, 0.01],
-					[0, 0.05]
+					[0.06, 0.0],
+					[0.045, 0.025]
 				]),
-				C.hoodie
+				C.hoodie,
+				{ double: true }
 			)
 		);
 		elbow.add(
@@ -192,7 +197,9 @@ const buildArm = (side: number, shoulderY: number, top: 'tee' | 'hoodie') => {
 		);
 	}
 
-	wrist.add(buildHand(side));
+	const hand = buildHand(side);
+	hand.scale.setScalar(1.15);
+	wrist.add(hand);
 	elbow.add(wrist);
 	shoulder.add(elbow);
 	return { shoulder, elbow, wrist, side };
@@ -200,6 +207,24 @@ const buildArm = (side: number, shoulderY: number, top: 'tee' | 'hoodie') => {
 
 const buildLegs = (color: string) => {
 	const legs = new THREE.Group();
+	// pelvis / waistband the legs grow out of
+	legs.add(
+		mesh(
+			lathe(
+				[
+					[0, 0.74],
+					[0.15, 0.745],
+					[0.16, 0.83],
+					[0.162, 0.9],
+					[0.14, 0.94],
+					[0, 0.945]
+				],
+				10
+			),
+			color,
+			{ scale: [1, 1, 0.62] }
+		)
+	);
 	for (const side of [-1, 1]) {
 		const leg = mesh(
 			lathe([
@@ -209,9 +234,9 @@ const buildLegs = (color: string) => {
 				[0.068, 0.35],
 				[0.058, 0.5],
 				[0.077, 0.66],
-				[0.094, 0.83],
-				[0.08, 0.92],
-				[0, 0.95]
+				[0.086, 0.78],
+				[0.06, 0.83],
+				[0, 0.84]
 			]),
 			color,
 			{ position: [side * 0.092, 0, 0], rotation: [0, 0, side * 0.025] }
@@ -237,21 +262,20 @@ const buildTorso = (top: 'tee' | 'hoodie') => {
 	const body = mesh(
 		lathe(
 			[
-				[0, -0.045],
-				[0.17 + grow, -0.04],
-				[0.174 + grow, -0.01],
-				[0.178 + grow, 0.08],
-				[0.158 + grow, 0.22],
-				[0.178 + grow, 0.35],
-				[0.2 + grow, 0.45],
-				[0.19 + grow, 0.52],
-				[0.09, 0.58],
-				[0, 0.585]
+				[0.182 + grow, -0.03],
+				[0.178 + grow, 0.03],
+				[0.162 + grow, 0.2],
+				[0.18 + grow, 0.34],
+				[0.205 + grow, 0.44],
+				[0.212 + grow, 0.49],
+				[0.18 + grow, 0.54],
+				[0.07, 0.568],
+				[0, 0.572]
 			],
-			9
+			10
 		),
 		color,
-		{ scale: [1, 1, 0.6] }
+		{ scale: [1, 1, 0.6], double: true }
 	);
 	torso.add(body);
 
@@ -283,7 +307,7 @@ const buildTorso = (top: 'tee' | 'hoodie') => {
 	return torso;
 };
 
-const buildHead = (outfit: { cap?: boolean; headset?: boolean }) => {
+const buildHead = (outfit: { headset?: boolean }) => {
 	const head = new THREE.Group();
 
 	// skull and jaw, a bit deeper than wide
@@ -327,78 +351,48 @@ const buildHead = (outfit: { cap?: boolean; headset?: boolean }) => {
 		})
 	);
 
-	if (outfit.cap) {
-		head.add(
-			mesh(new THREE.SphereGeometry(0.126, 10, 5, 0, Math.PI * 2, 0, Math.PI * 0.5), C.cap, {
-				position: [0, 0.03, -0.004],
-				scale: [1, 1.2, 1.16]
-			})
-		);
-		head.add(
-			mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.012, 8, 1, false, -Math.PI / 2, Math.PI), C.cap, {
-				position: [0, 0.05, 0.115],
-				rotation: [0.18, 0, 0],
-				scale: [1.05, 1, 1.05]
-			})
-		);
-		head.add(
-			mesh(new THREE.BoxGeometry(0.06, 0.026, 0.006), C.accent, {
-				position: [0, 0.105, 0.118],
-				rotation: [-0.45, 0, 0]
-			})
-		);
-		// hair at the sides and back under the cap
-		head.add(
-			mesh(new THREE.SphereGeometry(0.112, 9, 5, Math.PI * 0.75, Math.PI * 1.5, Math.PI * 0.3, Math.PI * 0.22), C.hair, {
-				scale: [1, 1, 1.08],
-				double: true
-			})
-		);
-	} else {
-		// short sides, longer top pushed up at the front, free forehead
-		const hair = mesh(new THREE.SphereGeometry(0.114, 9, 6, 0, Math.PI * 2, 0, Math.PI * 0.46), C.hair, {
+	// short sides, longer top pushed up at the front, free forehead
+	head.add(
+		mesh(new THREE.SphereGeometry(0.114, 9, 6, 0, Math.PI * 2, 0, Math.PI * 0.46), C.hair, {
 			position: [0, 0.03, -0.012],
 			rotation: [-0.32, 0, 0],
 			scale: [1, 1.05, 1.08]
-		});
-		head.add(hair);
-		const tufts: Array<[number, number, number, number]> = [
-			[-0.045, 0.15, 0.06, 0.4],
-			[0.0, 0.162, 0.07, 0.5],
-			[0.045, 0.15, 0.06, 0.4],
-			[-0.02, 0.17, 0.0, 0.1],
-			[0.03, 0.168, -0.01, 0.1]
-		];
-		for (const [x, y, z, tilt] of tufts) {
-			head.add(
-				mesh(new THREE.IcosahedronGeometry(0.04, 0), C.hair, {
-					position: [x, y, z],
-					rotation: [tilt, x * 6, 0],
-					scale: [1, 0.6, 1.1]
-				})
-			);
-		}
-	}
+		})
+	);
+	// swept-up top
+	head.add(
+		mesh(new THREE.IcosahedronGeometry(0.075, 1), C.hair, {
+			position: [0, 0.135, 0.02],
+			rotation: [0.35, 0, 0],
+			scale: [1.25, 0.5, 1.15]
+		})
+	);
+	head.add(
+		mesh(new THREE.IcosahedronGeometry(0.05, 0), C.hair, {
+			position: [0, 0.15, 0.065],
+			rotation: [0.6, 0.4, 0],
+			scale: [1.5, 0.55, 0.9]
+		})
+	);
 
 	if (outfit.headset) {
-		// VR headset pushed up onto the forehead, strap around the head
-		const headset = group([0, 0.13, 0.075]);
-		headset.rotation.x = -0.6;
+		// VR headset worn over the eyes, strap around the back of the head
+		const headset = group([0, 0.03, 0.098]);
 		headset.add(
-			mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.2, 8), C.device, {
+			mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.2, 8), C.device, {
 				rotation: [0, 0, Math.PI / 2],
-				scale: [1, 1, 1.25]
+				scale: [1, 1, 1.15]
 			})
 		);
 		headset.add(
-			mesh(new THREE.BoxGeometry(0.17, 0.07, 0.01), C.visor, { position: [0, 0, 0.074], emissive: true })
+			mesh(new THREE.BoxGeometry(0.17, 0.064, 0.01), C.visor, { position: [0, 0, 0.06], emissive: true })
 		);
 		head.add(headset);
 		head.add(
-			mesh(new THREE.TorusGeometry(0.113, 0.011, 4, 14), C.device, {
-				position: [0, 0.075, -0.01],
-				rotation: [Math.PI / 2 - 0.5, 0, 0],
-				scale: [1, 1.12, 1]
+			mesh(new THREE.TorusGeometry(0.114, 0.012, 4, 14), C.device, {
+				position: [0, 0.035, -0.01],
+				rotation: [Math.PI / 2 - 0.12, 0, 0],
+				scale: [1.02, 1.12, 1]
 			})
 		);
 	}
@@ -406,27 +400,12 @@ const buildHead = (outfit: { cap?: boolean; headset?: boolean }) => {
 	return head;
 };
 
-const buildController = () => {
-	const controller = new THREE.Group();
-	controller.add(mesh(new THREE.CylinderGeometry(0.016, 0.019, 0.1, 6), C.device, { position: [0, -0.06, 0.02] }));
-	controller.add(
-		mesh(new THREE.TorusGeometry(0.045, 0.008, 4, 10), C.visor, {
-			position: [0, -0.02, 0.07],
-			rotation: [0.4, 0, 0],
-			emissive: true
-		})
-	);
-	return controller;
-};
-
 // ------------------------------------------------------------------ figures
 
 const buildFigure = (outfit: {
 	top: 'tee' | 'hoodie';
 	legs: string;
-	cap?: boolean;
 	headset?: boolean;
-	controllers?: boolean;
 }): LowPolyAvatar => {
 	const root = new THREE.Group();
 	const figure = new THREE.Group();
@@ -434,7 +413,7 @@ const buildFigure = (outfit: {
 
 	figure.add(buildLegs(outfit.legs));
 
-	const hipY = 0.88;
+	const hipY = 0.9;
 	const torso = group([0, hipY, 0], buildTorso(outfit.top));
 	figure.add(torso);
 
@@ -459,21 +438,12 @@ const buildFigure = (outfit: {
 	head.position.set(0, 0.8, 0.005);
 	torso.add(head);
 
-	// relaxed pose like in the reference: arms slightly out, open hands
+	// relaxed pose: arms hang slightly away from the body
 	for (const arm of arms) {
 		const s = arm.side;
-		if (outfit.controllers) {
-			arm.shoulder.rotation.set(-0.15, 0, s * 0.16);
-			arm.elbow.rotation.set(-1.25, 0, 0);
-			arm.wrist.rotation.set(0.15, s * -0.4, 0);
-			const controller = buildController();
-			controller.position.set(0, -0.05, 0.02);
-			arm.wrist.add(controller);
-		} else {
-			arm.shoulder.rotation.set(0.05, 0, s * 0.2);
-			arm.elbow.rotation.set(-0.35, 0, s * -0.05);
-			arm.wrist.rotation.set(0, s * -0.9, s * 0.15);
-		}
+		arm.shoulder.rotation.set(0.04, 0, s * 0.12);
+		arm.elbow.rotation.set(-0.18, 0, s * -0.04);
+		arm.wrist.rotation.set(0, 0, s * -0.05);
 	}
 
 	const height = 1.86;
@@ -483,5 +453,5 @@ const buildFigure = (outfit: {
 
 export const buildLowPolyAvatar = (variant: LowPolyVariant): LowPolyAvatar =>
 	variant === 'dev'
-		? buildFigure({ top: 'hoodie', legs: C.pants, cap: true })
-		: buildFigure({ top: 'tee', legs: C.jeans, headset: true, controllers: true });
+		? buildFigure({ top: 'hoodie', legs: C.pants })
+		: buildFigure({ top: 'tee', legs: C.jeans, headset: true });
