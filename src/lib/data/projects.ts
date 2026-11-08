@@ -41,7 +41,7 @@ const items: Array<LocalizedProject> = [
 		name: { de: 'Flut.digital', en: 'Flut.digital' },
 		type: { de: 'Übungsprojekt · Web & Brand', en: 'Practice project · Web & brand' },
 		logo: Assets.FlutDigital,
-		period: { from: new Date(2025, 8, 29) },
+		period: { from: new Date(2025, 8, 29), to: new Date(2025, 9, 31) },
 		links: [github('Flut.digital')],
 		skillSlugs: ['nextjs', 'reactjs', 'ts', 'tailwind', 'threejs', 'firebase', 'ai'],
 		shortDescription: {
@@ -161,7 +161,7 @@ const items: Array<LocalizedProject> = [
 		name: { de: 'Portfolio', en: 'Portfolio' },
 		type: { de: 'Persönliche Website', en: 'Personal website' },
 		logo: Assets.Svelte,
-		period: { from: new Date(2025, 1, 14) },
+		period: { from: new Date(2025, 1, 14), to: new Date(2025, 3, 30) },
 		links: [
 			{ to: 'https://portfolio-dbw3.onrender.com', label: { de: 'Live', en: 'Live' } },
 			github('Portfolio')

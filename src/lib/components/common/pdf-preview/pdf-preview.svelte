@@ -2,65 +2,93 @@
 	import { onMount } from 'svelte';
 	import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 	import pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker.mjs?url';
+	import { language } from '$lib/stores/language';
 
-	export let src: string;
-	export let title = 'PDF Preview';
-
-	let canvas: HTMLCanvasElement;
-	let loading = true;
-	let error = false;
+	let { src, title = 'PDF' }: { src: string; title?: string } = $props();
 
 	pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-	async function renderPdf() {
-		if (!canvas || !src) {
-			return;
-		}
+	// The page container must always be in the DOM: rendering needs it, so it
+	// can't live inside the "loaded" branch (that was the old "stuck on loading" bug).
+	let container: HTMLDivElement;
+	let status: 'loading' | 'ready' | 'error' = $state('loading');
+	let renderId = 0;
 
-		loading = true;
-		error = false;
+	const copy = {
+		de: { loading: 'PDF wird geladen…', error: 'Die Vorschau konnte nicht geladen werden.', open: 'PDF öffnen' },
+		en: { loading: 'Loading PDF…', error: 'The preview could not be loaded.', open: 'Open PDF' }
+	};
+	let text = $derived(copy[$language]);
+
+	async function render() {
+		if (!container || !src) return;
+
+		const id = ++renderId;
 
 		try {
 			const pdf = await pdfjsLib.getDocument({ url: src }).promise;
-			const page = await pdf.getPage(1);
-			const viewport = page.getViewport({ scale: 1.1 });
-			const context = canvas.getContext('2d');
+			const width = container.clientWidth || 800;
+			const ratio = window.devicePixelRatio || 1;
+			const canvases: Array<HTMLCanvasElement> = [];
 
-			if (!context) {
-				throw new Error('Canvas context is unavailable');
+			for (let n = 1; n <= pdf.numPages; n++) {
+				const page = await pdf.getPage(n);
+				const base = page.getViewport({ scale: 1 });
+				const viewport = page.getViewport({ scale: (width / base.width) * ratio });
+
+				const canvas = document.createElement('canvas');
+				canvas.width = viewport.width;
+				canvas.height = viewport.height;
+				canvas.style.width = '100%';
+				canvas.className = 'rounded-md bg-white shadow-sm';
+				canvas.setAttribute('aria-label', `${title} – ${n}/${pdf.numPages}`);
+
+				await page.render({ canvas, viewport }).promise;
+				canvases.push(canvas);
 			}
 
-			canvas.width = viewport.width;
-			canvas.height = viewport.height;
-			await page.render({ canvas, viewport }).promise;
+			if (id !== renderId) return;
+
+			container.replaceChildren(...canvases);
+			status = 'ready';
 		} catch (caughtError) {
 			console.error(caughtError);
-			error = true;
-		} finally {
-			loading = false;
+			if (id === renderId) status = 'error';
 		}
-	}
-
-	$: if (src && canvas) {
-		renderPdf();
 	}
 
 	onMount(() => {
-		if (src) {
-			renderPdf();
-		}
-});
+		render();
+
+		// re-render sharply when the available width changes noticeably
+		let lastWidth = container.clientWidth;
+		let timer: ReturnType<typeof setTimeout>;
+		const observer = new ResizeObserver(() => {
+			const width = container.clientWidth;
+			if (Math.abs(width - lastWidth) < 40) return;
+			lastWidth = width;
+			clearTimeout(timer);
+			timer = setTimeout(render, 200);
+		});
+		observer.observe(container);
+
+		return () => {
+			observer.disconnect();
+			clearTimeout(timer);
+		};
+	});
 </script>
 
-<div class="w-full rounded-lg border border-border bg-white p-3 shadow-sm" aria-label={title}>
-	{#if loading}
-		<div class="flex min-h-[560px] items-center justify-center text-sm text-muted-foreground">PDF wird geladen…</div>
-	{:else if error}
-		<div class="flex min-h-[560px] flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
-			<p>Die Vorschau konnte nicht gerendert werden.</p>
-			<a href={src} download class="underline">PDF herunterladen</a>
+<div class="w-full rounded-lg border border-border bg-muted/30 p-2 sm:p-3" role="document" aria-label={title}>
+	{#if status === 'loading'}
+		<div class="flex min-h-[400px] items-center justify-center text-sm text-muted-foreground">
+			{text.loading}
 		</div>
-	{:else}
-		<canvas bind:this={canvas} class="mx-auto max-w-full rounded-md bg-white"></canvas>
+	{:else if status === 'error'}
+		<div class="flex min-h-[400px] flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
+			<p>{text.error}</p>
+			<a href={src} target="_blank" rel="noopener" class="underline">{text.open}</a>
+		</div>
 	{/if}
+	<div bind:this={container} class="flex flex-col gap-3"></div>
 </div>
