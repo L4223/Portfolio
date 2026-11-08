@@ -87,6 +87,10 @@ const Assets = {
 	Bayer: asset('bayer.png'),
 	WebXR: asset('webxr.png'),
 	FHWave: asset('fhwave.png'),
+	FlutDigital: asset('flutdigital.svg'),
+	SpaceJourney: asset('spacejourney.svg'),
+	Pacman: asset('pacman.svg'),
+	Blender: asset('blender.svg')
 };
 
 export default Assets;

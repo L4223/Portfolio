@@ -12,8 +12,8 @@ type HeroLink = { label: string; href: string; icon: `i-carbon-${string}` };
 const hero = {
         title: `${BaseData.fullName},`,
         description: {
-                de: 'Ich liebe es, kreative digitale Lösungen zu bauen – ob Web, XR oder einfach coole Projekte. Schau dich gerne um!',
-                en: 'I love building creative digital solutions—whether that is the web, XR, or just cool side projects. Feel free to take a look around!'
+                de: 'Ich bin Medieningenieur (B.Eng.) und baue Web-Anwendungen, die schnell, zugänglich und angenehm zu benutzen sind – und bringe 3D, AR und KI dorthin, wo sie echten Nutzen stiften. Gerade suche ich eine Stelle als Junior Frontend- oder Fullstack-Entwickler.',
+                en: 'I am a media engineer (B.Eng.) building web apps that are fast, accessible and pleasant to use – and I bring 3D, AR and AI to where they add real value. I am currently looking for a junior frontend or full-stack developer role.'
         } satisfies LocalizedString,
         links: [
                 { label: 'GitHub', href: 'https://github.com/L4223', icon: 'i-carbon-logo-github' },

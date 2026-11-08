@@ -3,6 +3,8 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 import { base } from '$app/paths';
+import { get } from 'svelte/store';
+import { language, type Language } from '$lib/stores/language';
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
@@ -61,79 +63,55 @@ const WEEK = 7 * 24 * 60 * 60 * 1000;
 const MONTH = 30 * 24 * 60 * 60 * 1000;
 const YEAR = 365 * 24 * 60 * 60 * 1000;
 
+type Unit = 'year' | 'month' | 'week' | 'day';
+
+const unitNames: Record<Language, Record<Unit, [string, string]>> = {
+	de: { year: ['Jahr', 'Jahre'], month: ['Monat', 'Monate'], week: ['Woche', 'Wochen'], day: ['Tag', 'Tage'] },
+	en: { year: ['year', 'years'], month: ['month', 'months'], week: ['week', 'weeks'], day: ['day', 'days'] }
+};
+
+const formatUnit = (value: number, unit: Unit, lang: Language) =>
+	`${value} ${unitNames[lang][unit][value === 1 ? 0 : 1]}`;
+
+/**
+ * Human readable duration, e.g. "1 Jahr und 3 Monate" / "1 year and 3 months".
+ * Shows years and months; weeks and days only for periods shorter than a month.
+ */
 export function computeExactDuration(from: Date, to: Date = new Date()): string {
-	const fromMs = from.getTime();
-	const toMs = to.getTime();
+	const lang = get(language);
+	const and = lang === 'de' ? 'und' : 'and';
+
+	const remaining = Math.max(0, to.getTime() - from.getTime());
+
+	const years = Math.trunc(remaining / YEAR);
+	const months = Math.trunc((remaining % YEAR) / MONTH);
 
 	const display: Array<string> = [];
 
-	let remaining = toMs - fromMs;
-
-	const years = remaining / YEAR;
-
-	if (years >= 1) {
-		remaining = remaining % YEAR;
-		display.push(`${Math.trunc(years)} year${years >= 2 ? 's' : ''}`);
-	}
-
-	const months = remaining / MONTH;
-	if (months >= 1) {
-		remaining = remaining % MONTH;
-		display.push(`${Math.trunc(months)} month${months >= 2 ? 's' : ''}`);
-	}
-
-	const weeks = remaining / WEEK;
-	if (weeks >= 1) {
-		remaining = remaining % WEEK;
-		display.push(`${Math.trunc(weeks)} week${weeks >= 2 ? 's' : ''}`);
-	}
-
-	const days = remaining / DAY;
-	if (days >= 1) {
-		remaining = remaining % DAY;
-		display.push(`${Math.trunc(days)} day${days >= 2 ? 's' : ''}`);
-	}
+	if (years > 0) display.push(formatUnit(years, 'year', lang));
+	if (months > 0) display.push(formatUnit(months, 'month', lang));
 
 	if (display.length === 0) {
-		return '1 day';
+		const weeks = Math.trunc(remaining / WEEK);
+		const days = Math.trunc((remaining % WEEK) / DAY);
+
+		if (weeks > 0) display.push(formatUnit(weeks, 'week', lang));
+		else display.push(formatUnit(Math.max(1, days), 'day', lang));
 	}
 
-	return display
-		.map((it, index) => {
-			if (display.length === 1 || index === display.length - 1) return it;
-
-			if (index === display.length - 2) {
-				return `${it} and`;
-			}
-
-			return `${it},`;
-		})
-		.join(' ');
+	return display.join(` ${and} `);
 }
 
-const monthNames = [
-	'January',
-	'February',
-	'March',
-	'April',
-	'May',
-	'June',
-	'July',
-	'August',
-	'September',
-	'October',
-	'November',
-	'December'
-];
-
 export const getMonthName = (index: number): string => {
-	return monthNames[index];
+	const lang = get(language);
+
+	return new Date(2000, index, 1).toLocaleString(lang === 'de' ? 'de-DE' : 'en-US', { month: 'long' });
 };
 
 export const href = (url: string) => `${base}${url}`;
 
 export const getMonthAndYear = (date?: Date) => {
-	if (!date) return 'Present';
+	if (!date) return get(language) === 'de' ? 'Heute' : 'Present';
 
 	return `${getMonthName(date.getMonth())} ${date.getFullYear()}`;
 };

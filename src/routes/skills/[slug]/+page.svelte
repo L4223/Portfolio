@@ -21,15 +21,18 @@
 
 	let { data }: { data: { item?: Skill } } = $props();
 
+	// re-resolve from the store so the page follows the language toggle
+	let item = $derived($SkillsData.items.find((it) => it.slug === data.item?.slug));
+
         const notFound: LocalizedString = { de: 'Nicht gefunden', en: 'Not found' };
-        let title = $derived(`${data?.item?.name ?? translate(notFound, $language)} - ${$SkillsData.title}`);
+        let title = $derived(`${item?.name ?? translate(notFound, $language)} - ${$SkillsData.title}`);
 	let banner = $derived(
-		($mode == 'dark' ? data?.item?.logo.dark : data.item?.logo.light) ?? Assets.Unknown.light
+		($mode == 'dark' ? item?.logo.dark : item?.logo.light) ?? Assets.Unknown.light
 	);
 
 	let related = $derived(
 		(() => {
-			const current = data.item;
+			const current = item;
 
 			if (!current) return [];
 
@@ -61,15 +64,15 @@
 </script>
 
 <BasePage {title}>
-	{#if !data.item}
+	{#if !item}
 		<EmptyResult />
 	{:else}
 		<FancyBanner img={banner}>
-			<H1>{data.item.name}</H1>
+			<H1>{item.name}</H1>
 		</FancyBanner>
 		<Separator />
-		{#if data.item.description.trim()}
-			<Markdown content={data.item.description} />
+		{#if item.description.trim()}
+			<Markdown content={item.description} />
 		{:else}
 			<EmptyMarkdown />
 		{/if}

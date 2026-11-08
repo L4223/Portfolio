@@ -4,6 +4,11 @@
 	import '../app.css';
 	import '../markdown.css';
 	import { ModeWatcher } from 'mode-watcher';
+	import { language } from '$lib/stores/language';
+
+	$effect(() => {
+		document.documentElement.lang = $language;
+	});
 
 	let { children } = $props();
 </script>

@@ -19,37 +19,40 @@
 
         let { data }: { data: { item?: Project } } = $props();
 
+	// re-resolve from the store so the page follows the language toggle
+	let item = $derived($ProjectsData.items.find((it) => it.slug === data.item?.slug));
+
         const notFound: LocalizedString = { de: 'Nicht gefunden', en: 'Not found' };
-        let title = $derived(`${data?.item?.name ?? translate(notFound, $language)} - ${$ProjectsData.title}`);
+        let title = $derived(`${item?.name ?? translate(notFound, $language)} - ${$ProjectsData.title}`);
 	let banner = $derived(
-		($mode == 'dark' ? data?.item?.logo.dark : data.item?.logo.light) ?? Assets.Unknown.light
+		($mode == 'dark' ? item?.logo.dark : item?.logo.light) ?? Assets.Unknown.light
 	);
 
 	let duration = $derived(
-		`${getMonthAndYear(data.item?.period.from)} - ${getMonthAndYear(data.item?.period.to)} · ${computeExactDuration(
-			data.item?.period.from ?? new Date(),
-			data.item?.period.to
+		`${getMonthAndYear(item?.period.from)} - ${getMonthAndYear(item?.period.to)} · ${computeExactDuration(
+			item?.period.from ?? new Date(),
+			item?.period.to
 		)}`
 	);
 </script>
 
 <BasePage {title}>
-	{#if !data.item}
+	{#if !item}
 		<EmptyResult />
 	{:else}
 		<FancyBanner img={banner}>
 			<div class="flex w-full flex-col items-center justify-center gap-4">
-				<H1>{data.item.name}</H1>
-				<Muted>{data.item.type}</Muted>
+				<H1>{item.name}</H1>
+				<Muted>{item.type}</Muted>
 				<Muted>{duration}</Muted>
 				<Separator />
 				<div class="flex flex-row flex-wrap justify-center gap-2">
-					{#each data.item.links as link (link.to)}
+					{#each item.links as link (link.to)}
 						<a href={link.to} target="_blank"><Badge variant="outline">{link.label}</Badge></a>
 					{/each}
 				</div>
 				<div class="flex flex-row flex-wrap justify-center gap-2">
-					{#each data.item.skills as skill (skill.slug)}
+					{#each item.skills as skill (skill.slug)}
 						<a href={href(`/skills/${skill.slug}`)}>
 							<Badge variant="outline" class="flex flex-row items-center justify-center gap-2">
 								<img
@@ -65,17 +68,17 @@
 			</div>
 		</FancyBanner>
 		<Separator />
-		{#if data.item.description.trim()}
-			<div class="markdown-container">{@html data.item.description}</div>
+		{#if item.description.trim()}
+			<div class="markdown-container project-content">{@html item.description}</div>
 		{:else}
 			<EmptyMarkdown />
 		{/if}
 		<Separator />
 		<div class="flex flex-col gap-2 px-4 pt-4">
-			{#if data.item.screenshots && data.item.screenshots.length > 0}
+			{#if item.screenshots && item.screenshots.length > 0}
                                 <Muted>{$UiText.screenshots}</Muted>
 				<div class="grid grid-cols-1 gap-2 py-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-					{#each data.item.screenshots as img, index (index)}
+					{#each item.screenshots as img, index (index)}
 						<ScreenshotCard item={img} />
 					{/each}
 				</div>

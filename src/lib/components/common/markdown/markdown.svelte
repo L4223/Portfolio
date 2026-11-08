@@ -12,20 +12,27 @@
 
 	export let content: string;
 
-	onMount(async () => {
+	let mounted = false;
+	let renderId = 0;
+
+	const render = async (value: string) => {
+		const id = ++renderId;
+		const parsed = await marked.parse(value);
+
+		// ignore stale renders when the content changes quickly (e.g. language toggle)
+		if (id !== renderId || !container) return;
+
+		container.innerHTML = createSanitizer(window).sanitize(parsed);
+		Prism.highlightAllUnder(container);
+	};
+
+	onMount(() => {
 		marked.use(gfmHeadingId());
 		marked.use(mangle());
-
-		const sanitizer = createSanitizer(window);
-
-		if (window) {
-			const parsed = await marked.parse(content);
-
-			container.innerHTML = sanitizer.sanitize(parsed);
-
-			Prism.highlightAllUnder(container);
-		}
+		mounted = true;
 	});
+
+	$: if (mounted) render(content);
 </script>
 
 <div bind:this={container} class="markdown-container p-4"></div>

@@ -19,21 +19,31 @@ const title: LocalizedString = { de: 'Bildung', en: 'Education' };
 const items: Array<LocalizedEducation> = [
         {
                 degree: { de: 'Bachelor of Engineering', en: 'Bachelor of Engineering' },
-                description: { de: '', en: '' },
+                description: {
+                        de: 'Abschluss als Bachelor of Engineering. Bachelorarbeit zu WebXR im Schulunterricht in Kooperation mit Dataport (SchoolXR).',
+                        en: 'Graduated as Bachelor of Engineering. Bachelor thesis on WebXR in school lessons in cooperation with Dataport (SchoolXR).'
+                },
                 location: { de: 'Kiel, Deutschland', en: 'Kiel, Germany' },
                 logo: Assets.FH,
                 name: { de: 'Medieningenieur', en: 'Media Engineering' },
                 organization: { de: 'Fachhochschule Kiel', en: 'Kiel University of Applied Sciences' },
                 period: { from: new Date(2021, 0, 1), to: new Date(2025, 5, 1) },
-                shortDescription: { de: '', en: '' },
-                slug: 'dummy-education-item-2',
+                shortDescription: {
+                        de: 'B.Eng. Medieningenieurwesen, Bachelorarbeit mit Dataport.',
+                        en: 'B.Eng. Media Engineering, bachelor thesis with Dataport.'
+                },
+                slug: 'fh-kiel',
                 subjects: [
                         { de: 'Informatik', en: 'Computer Science' },
                         { de: 'Softwareentwicklung', en: 'Software Development' },
-                        { de: 'Java Script', en: 'JavaScript' },
+                        { de: 'Webanwendungen', en: 'Web Applications' },
+                        { de: 'JavaScript', en: 'JavaScript' },
                         { de: 'Python', en: 'Python' },
                         { de: 'C#', en: 'C#' },
-                        { de: 'UX/UI Design', en: 'UX/UI Design' }
+                        { de: 'UX/UI Design', en: 'UX/UI Design' },
+                        { de: 'Agile Entwicklungsmethoden (Scrum)', en: 'Agile Development Methods (Scrum)' },
+                        { de: 'Creative Technologies', en: 'Creative Technologies' },
+                        { de: 'XR / 3D', en: 'XR / 3D' }
                 ]
         },
         {
@@ -45,7 +55,7 @@ const items: Array<LocalizedEducation> = [
                 organization: { de: 'Gymnasium Altenholz', en: 'Gymnasium Altenholz' },
                 period: { from: new Date(2012, 0, 1), to: new Date(2020, 5, 1) },
                 shortDescription: { de: '', en: '' },
-                slug: 'dummy-education-item',
+                slug: 'gymnasium-altenholz',
                 subjects: [
                         { de: 'Biologie', en: 'Biology' },
                         { de: 'Chemie', en: 'Chemistry' },
