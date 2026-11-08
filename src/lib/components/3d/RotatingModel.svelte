@@ -1,5 +1,7 @@
 <script lang="ts" module>
-	export type AvatarVariant = 'warm' | 'studio' | 'original';
+	import type { ToonVariant } from './toon-avatar';
+
+	export type AvatarVariant = ToonVariant | 'original';
 </script>
 
 <script lang="ts">
@@ -7,50 +9,65 @@
 	import { GLTF, OrbitControls } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
+	import { buildToonAvatar, setOutlineColor } from './toon-avatar';
 
-	let { variant = 'warm' }: { variant?: AvatarVariant } = $props();
+	let { variant = 'chibi' }: { variant?: AvatarVariant } = $props();
 
 	let isLight = $derived($mode === 'light');
 
-	// Original scene, kept for comparison (see static/models/original/)
+	// Original 3D scan, kept for comparison (static/models/original/)
 	let originalDirectional = $derived(isLight ? 0.9 : 0.35);
 	let originalAmbient = $derived(isLight ? 0.3 : 0.02);
+
+	// every toon variant is scaled to the same height so one camera fits all
+	const TARGET_HEIGHT = 2.2;
+	const avatar = variant === 'original' ? undefined : buildToonAvatar(variant);
+	if (avatar) avatar.root.scale.setScalar(TARGET_HEIGHT / avatar.height);
+
+	$effect(() => {
+		setOutlineColor(isLight ? '#17131c' : '#ece8f6');
+	});
 
 	const reducedMotion =
 		typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-	// Gentle idle motion: the avatar faces the visitor and sways instead of
-	// spinning (a full turn mostly shows the back, which feels distant).
-	let time = 0;
-	let rotationY = $state(0);
-	let offsetY = $state(0);
 	let pointerX = 0;
 	let pointerY = 0;
-
 	const onPointerMove = (event: PointerEvent) => {
 		pointerX = (event.clientX / window.innerWidth) * 2 - 1;
 		pointerY = (event.clientY / window.innerHeight) * 2 - 1;
 	};
 
+	let time = 0;
+	let nextBlink = 2.5;
+
 	useTask((delta) => {
-		if (variant === 'original' || reducedMotion) return;
+		if (!avatar || reducedMotion) return;
 		time += delta;
 
-		if (variant === 'warm') {
-			rotationY = Math.sin(time * 0.5) * 0.45;
-			offsetY = Math.sin(time * 1.2) * 0.012;
-		} else {
-			// studio: slow breathing, turns a little towards the cursor
-			const target = pointerX * 0.5;
-			rotationY += (target - rotationY) * Math.min(1, delta * 2.5);
-			offsetY = Math.sin(time * 1.1) * 0.01 - pointerY * 0.01;
-		}
+		// breathing and a gentle sway
+		avatar.body.scale.y = 1 + Math.sin(time * 2) * 0.012;
+		avatar.root.rotation.y = Math.sin(time * 0.45) * 0.18;
+
+		// the head follows the cursor a little
+		const lerp = Math.min(1, delta * 4);
+		avatar.head.rotation.y += (pointerX * 0.45 - avatar.head.rotation.y) * lerp;
+		avatar.head.rotation.x += (pointerY * 0.2 - avatar.head.rotation.x) * lerp;
+		avatar.head.rotation.z = Math.sin(time * 1.3) * 0.04;
+
+		// blink every few seconds
+		const blinking = time > nextBlink && time < nextBlink + 0.14;
+		for (const eye of avatar.eyes) eye.scale.y = blinking ? 0.12 : 1;
+		if (time > nextBlink + 0.14) nextBlink = time + 2.5 + Math.random() * 3;
+
+		// friendly wave
+		if (avatar.waveArm) avatar.waveArm.rotation.z = -2.45 + Math.sin(time * 6) * 0.28;
 	});
 </script>
 
-<svelte:window onpointermove={variant === 'studio' ? onPointerMove : undefined} />
+<svelte:window onpointermove={onPointerMove} />
 
-{#if variant === 'original'}
+{#if !avatar}
 	<T.PerspectiveCamera makeDefault position={[5, 2, 5]} fov={25}>
 		<OrbitControls autoRotate enableDamping autoRotateSpeed={0.45} />
 	</T.PerspectiveCamera>
@@ -59,48 +76,23 @@
 	<T.DirectionalLight position={[-15, 0, 0]} intensity={originalDirectional} castShadow />
 
 	<GLTF url={`${base}/models/original/me.glb`} />
-{:else if variant === 'warm'}
-	<!-- full body, warm key light from the front, cool rim light from behind -->
-	<T.PerspectiveCamera makeDefault position={[0, 0.35, 5.6]} fov={22}>
-		<OrbitControls
-			enableDamping
-			enableZoom={false}
-			enablePan={false}
-			target={[0, 0.05, 0]}
-			minPolarAngle={1.2}
-			maxPolarAngle={1.75}
-		/>
-	</T.PerspectiveCamera>
-
-	<T.HemisphereLight args={['#fff4e6', '#3a3550', isLight ? 1.1 : 0.9]} />
-	<T.DirectionalLight position={[2.5, 3, 4]} intensity={isLight ? 2.2 : 2} color="#ffe2c4" />
-	<T.DirectionalLight position={[-3, 1, 2]} intensity={0.7} color="#dce8ff" />
-	<T.DirectionalLight position={[0, 2.5, -4]} intensity={1.4} color="#9ec5ff" />
-	<!-- soft fill from below the face, so the cap doesn't shadow the eyes -->
-	<T.PointLight position={[0, 0.55, 1.2]} intensity={5} distance={3} color="#ffe9d6" />
-
-	<T.Group rotation.y={rotationY} position.y={offsetY}>
-		<GLTF url={`${base}/models/me-warm.glb`} />
-	</T.Group>
 {:else}
-	<!-- head-and-shoulders portrait, soft high-key light like a photo studio -->
-	<T.PerspectiveCamera makeDefault position={[0, 0.72, 3.5]} fov={20}>
+	<T.PerspectiveCamera makeDefault position={[0, 0.1, 6]} fov={25}>
 		<OrbitControls
 			enableDamping
 			enableZoom={false}
 			enablePan={false}
-			enableRotate={false}
-			target={[0, 0.56, 0]}
+			target={[0, 0, 0]}
+			minPolarAngle={1.2}
+			maxPolarAngle={1.8}
+			minAzimuthAngle={-0.9}
+			maxAzimuthAngle={0.9}
 		/>
 	</T.PerspectiveCamera>
 
-	<T.HemisphereLight args={['#ffffff', '#c9d2e0', isLight ? 1.5 : 1.3]} />
-	<T.DirectionalLight position={[1.5, 2, 4]} intensity={1.8} color="#ffffff" />
-	<T.DirectionalLight position={[-2.5, 1, 3]} intensity={1.1} color="#f2f6ff" />
-	<T.DirectionalLight position={[0, 2, -3]} intensity={1.6} color="#ffffff" />
-	<T.PointLight position={[0, 0.6, 1]} intensity={5} distance={2.5} color="#ffffff" />
+	<T.AmbientLight intensity={isLight ? 1.2 : 1} />
+	<T.DirectionalLight position={[3, 4, 5]} intensity={2.2} />
+	<T.DirectionalLight position={[-3, 1, 2]} intensity={0.6} color="#dfe6ff" />
 
-	<T.Group rotation.y={rotationY} position.y={offsetY}>
-		<GLTF url={`${base}/models/me-studio.glb`} />
-	</T.Group>
+	<T is={avatar.root} />
 {/if}

@@ -23,11 +23,11 @@
         const ctaProjects: LocalizedString = { de: 'Projekte ansehen', en: 'View projects' };
         const ctaResume: LocalizedString = { de: 'Lebenslauf', en: 'Resume' };
 
-        // ?avatar=warm|studio|original to compare the avatar versions
-        const variants: Array<AvatarVariant> = ['warm', 'studio', 'original'];
+        // ?avatar=chibi|dev|xr|original to compare the avatar versions
+        const variants: Array<AvatarVariant> = ['chibi', 'dev', 'xr', 'original'];
         let avatar = $derived.by(() => {
                 const requested = $page.url.searchParams.get('avatar') as AvatarVariant | null;
-                return requested && variants.includes(requested) ? requested : 'warm';
+                return requested && variants.includes(requested) ? requested : 'chibi';
         });
 </script>
 
