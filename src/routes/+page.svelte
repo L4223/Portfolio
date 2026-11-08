@@ -11,7 +11,8 @@
         import { language } from '$lib/stores/language';
         import { href } from '$lib/utils';
         import { mode } from 'mode-watcher';
-        import RotatingModel from '$lib/components/3d/RotatingModel.svelte';
+        import RotatingModel, { type AvatarVariant } from '$lib/components/3d/RotatingModel.svelte';
+        import { page } from '$app/stores';
         import { Canvas } from '@threlte/core';
 
         const greeting: LocalizedString = { de: 'Moin, ich bin Lasse!', en: "Hi, I'm Lasse!" };
@@ -21,6 +22,13 @@
         };
         const ctaProjects: LocalizedString = { de: 'Projekte ansehen', en: 'View projects' };
         const ctaResume: LocalizedString = { de: 'Lebenslauf', en: 'Resume' };
+
+        // ?avatar=warm|studio|original to compare the avatar versions
+        const variants: Array<AvatarVariant> = ['warm', 'studio', 'original'];
+        let avatar = $derived.by(() => {
+                const requested = $page.url.searchParams.get('avatar') as AvatarVariant | null;
+                return requested && variants.includes(requested) ? requested : 'warm';
+        });
 </script>
 
 <Title title={$HomeData.title} />
@@ -74,9 +82,11 @@
 			</Carousel> -->
 
 			<div class="canvas-container">
-                                <Canvas>
-                                        <RotatingModel />
-                                </Canvas>
+                                {#key avatar}
+                                        <Canvas>
+                                                <RotatingModel variant={avatar} />
+                                        </Canvas>
+                                {/key}
 			</div>
 		</div>
 	</div>
