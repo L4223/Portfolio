@@ -11,6 +11,14 @@
         import { language } from '$lib/stores/language';
         import { href } from '$lib/utils';
         import { mode } from 'mode-watcher';
+        import { Canvas } from '@threlte/core';
+        import { WebGLRenderer } from 'three';
+
+        // opaque canvas: the backdrop is drawn in WebGL in the page colour, so
+        // the browser never has to blend a semi-transparent canvas
+        const createRenderer = (canvas: HTMLCanvasElement) =>
+                new WebGLRenderer({ canvas, alpha: false, antialias: true });
+        import BlurredAvatar from '$lib/components/3d/BlurredAvatar.svelte';
 
         const greeting: LocalizedString = { de: 'Moin, ich bin Lasse!', en: "Hi, I'm Lasse!" };
         const role: LocalizedString = {
@@ -20,9 +28,9 @@
         const ctaProjects: LocalizedString = { de: 'Projekte ansehen', en: 'View projects' };
         const ctaResume: LocalizedString = { de: 'Lebenslauf', en: 'Resume' };
 
-        const portraitAlt: LocalizedString = {
-                de: 'Lasse Knodt, stark weichgezeichnet',
-                en: 'Lasse Knodt, heavily blurred'
+        const avatarLabel: LocalizedString = {
+                de: '3D-Figur von Lasse, weichgezeichnet. Zum Drehen ziehen.',
+                en: '3D figure of Lasse, blurred. Drag to turn.'
         };
 </script>
 
@@ -76,45 +84,45 @@
 				<CarouselPrevious />
 			</Carousel> -->
 
-			<picture class="portrait">
-				<source srcset={href('/images/hero-blur.webp')} type="image/webp" />
-				<img
-					src={href('/images/hero-blur.png')}
-					alt={translate(portraitAlt, $language)}
-					width="556"
-					height="1266"
-					fetchpriority="high"
-				/>
-			</picture>
+			<div class="avatar" role="img" aria-label={translate(avatarLabel, $language)}>
+				<Canvas {createRenderer}>
+					<BlurredAvatar />
+				</Canvas>
+			</div>
 		</div>
 	</div>
 </ResponsiveContainer>
 
 <style>
-	/* Blurred cut-out portrait. The image already carries transparent padding,
-	   so the blur fades out completely instead of being clipped. */
-	.portrait {
-		display: block;
-		height: min(720px, 64vh);
+	/* Real-time 3D figure, blurred in WebGL like an out-of-focus photo (see
+	   BlurredAvatar.svelte). The camera leaves a wide margin around the figure
+	   so the blur fades out completely instead of being cut at the edges. */
+	.avatar {
+		width: min(380px, 92vw);
+		height: min(800px, 74vh);
+		cursor: grab;
+		touch-action: pan-y;
+		animation: avatar-in 1.2s ease-out both;
 	}
 
-	.portrait img {
-		height: 100%;
-		width: auto;
-		user-select: none;
-		pointer-events: none;
-		animation: portrait-in 1.2s ease-out both;
+	@media (min-width: 1280px) {
+		.avatar {
+			width: 460px;
+		}
 	}
 
-	@keyframes portrait-in {
+	.avatar:active {
+		cursor: grabbing;
+	}
+
+	@keyframes avatar-in {
 		from {
 			opacity: 0;
-			transform: translateY(12px);
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.portrait img {
+		.avatar {
 			animation: none;
 		}
 	}
