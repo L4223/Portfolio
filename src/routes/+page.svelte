@@ -23,11 +23,11 @@
         const ctaProjects: LocalizedString = { de: 'Projekte ansehen', en: 'View projects' };
         const ctaResume: LocalizedString = { de: 'Lebenslauf', en: 'Resume' };
 
-        // ?avatar=chibi|dev|xr|original to compare the avatar versions
-        const variants: Array<AvatarVariant> = ['chibi', 'dev', 'xr', 'original'];
+        // ?avatar=xr|dev|original to compare the avatar versions
+        const variants: Array<AvatarVariant> = ['xr', 'dev', 'original'];
         let avatar = $derived.by(() => {
                 const requested = $page.url.searchParams.get('avatar') as AvatarVariant | null;
-                return requested && variants.includes(requested) ? requested : 'chibi';
+                return requested && variants.includes(requested) ? requested : 'xr';
         });
 </script>
 
@@ -81,7 +81,7 @@
 				<CarouselPrevious />
 			</Carousel> -->
 
-			<div class="canvas-container">
+			<div class="canvas-container" class:glow={avatar !== 'original'}>
                                 {#key avatar}
                                         <Canvas>
                                                 <RotatingModel variant={avatar} />
@@ -106,6 +106,27 @@
 		align-items: center; */
 		width: 300px;
 		height: min(700px, 60vh);
+		border-radius: 1.5rem;
+	}
+
+	/* soft violet glow behind the low-poly avatar, like a studio backdrop */
+	.canvas-container.glow {
+		background: radial-gradient(
+			ellipse 70% 55% at 50% 45%,
+			rgb(124 58 237 / 0.38),
+			rgb(76 29 149 / 0.16) 55%,
+			transparent 75%
+		);
+	}
+
+	:global(.light) .canvas-container.glow,
+	:global(html:not(.dark)) .canvas-container.glow {
+		background: radial-gradient(
+			ellipse 70% 55% at 50% 45%,
+			rgb(139 92 246 / 0.22),
+			rgb(139 92 246 / 0.08) 55%,
+			transparent 75%
+		);
 	}
 
 	/* Ensures content remains in front of the canvas */

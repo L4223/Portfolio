@@ -1,7 +1,7 @@
 <script lang="ts" module>
-	import type { ToonVariant } from './toon-avatar';
+	import type { LowPolyVariant } from './lowpoly-avatar';
 
-	export type AvatarVariant = ToonVariant | 'original';
+	export type AvatarVariant = LowPolyVariant | 'original';
 </script>
 
 <script lang="ts">
@@ -9,9 +9,9 @@
 	import { GLTF, OrbitControls } from '@threlte/extras';
 	import { mode } from 'mode-watcher';
 	import { base } from '$app/paths';
-	import { buildToonAvatar, setOutlineColor } from './toon-avatar';
+	import { buildLowPolyAvatar } from './lowpoly-avatar';
 
-	let { variant = 'chibi' }: { variant?: AvatarVariant } = $props();
+	let { variant = 'xr' }: { variant?: AvatarVariant } = $props();
 
 	let isLight = $derived($mode === 'light');
 
@@ -19,14 +19,7 @@
 	let originalDirectional = $derived(isLight ? 0.9 : 0.35);
 	let originalAmbient = $derived(isLight ? 0.3 : 0.02);
 
-	// every toon variant is scaled to the same height so one camera fits all
-	const TARGET_HEIGHT = 2.2;
-	const avatar = variant === 'original' ? undefined : buildToonAvatar(variant);
-	if (avatar) avatar.root.scale.setScalar(TARGET_HEIGHT / avatar.height);
-
-	$effect(() => {
-		setOutlineColor(isLight ? '#17131c' : '#ece8f6');
-	});
+	const avatar = variant === 'original' ? undefined : buildLowPolyAvatar(variant);
 
 	const reducedMotion =
 		typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -39,29 +32,32 @@
 	};
 
 	let time = 0;
-	let nextBlink = 2.5;
+	const rest = avatar?.arms.map((arm) => ({
+		shoulder: arm.shoulder.rotation.clone(),
+		elbow: arm.elbow.rotation.clone()
+	}));
 
 	useTask((delta) => {
-		if (!avatar || reducedMotion) return;
+		if (!avatar || !rest || reducedMotion) return;
 		time += delta;
 
-		// breathing and a gentle sway
-		avatar.body.scale.y = 1 + Math.sin(time * 2) * 0.012;
-		avatar.root.rotation.y = Math.sin(time * 0.45) * 0.18;
+		// breathing, slight weight shift
+		const breath = Math.sin(time * 1.6);
+		avatar.torso.scale.set(1 + breath * 0.006, 1 + breath * 0.008, 1 + breath * 0.01);
+		avatar.root.rotation.y = Math.sin(time * 0.35) * 0.22;
+		avatar.root.rotation.z = Math.sin(time * 0.7) * 0.012;
 
 		// the head follows the cursor a little
-		const lerp = Math.min(1, delta * 4);
-		avatar.head.rotation.y += (pointerX * 0.45 - avatar.head.rotation.y) * lerp;
-		avatar.head.rotation.x += (pointerY * 0.2 - avatar.head.rotation.x) * lerp;
-		avatar.head.rotation.z = Math.sin(time * 1.3) * 0.04;
+		const lerp = Math.min(1, delta * 3);
+		avatar.head.rotation.y += (pointerX * 0.5 - avatar.root.rotation.y - avatar.head.rotation.y) * lerp;
+		avatar.head.rotation.x += (pointerY * 0.18 - avatar.head.rotation.x) * lerp;
 
-		// blink every few seconds
-		const blinking = time > nextBlink && time < nextBlink + 0.14;
-		for (const eye of avatar.eyes) eye.scale.y = blinking ? 0.12 : 1;
-		if (time > nextBlink + 0.14) nextBlink = time + 2.5 + Math.random() * 3;
-
-		// friendly wave
-		if (avatar.waveArm) avatar.waveArm.rotation.z = -2.45 + Math.sin(time * 6) * 0.28;
+		// arms sway gently around their rest pose
+		avatar.arms.forEach((arm, i) => {
+			const phase = time * 1.6 + i * 0.8;
+			arm.shoulder.rotation.x = rest[i].shoulder.x + Math.sin(phase) * 0.03;
+			arm.elbow.rotation.x = rest[i].elbow.x + Math.sin(phase + 0.6) * 0.04;
+		});
 	});
 </script>
 
@@ -77,22 +73,25 @@
 
 	<GLTF url={`${base}/models/original/me.glb`} />
 {:else}
-	<T.PerspectiveCamera makeDefault position={[0, 0.1, 6]} fov={25}>
+	<T.PerspectiveCamera makeDefault position={[0, 0.46, 3.4]} fov={24}>
 		<OrbitControls
 			enableDamping
 			enableZoom={false}
 			enablePan={false}
-			target={[0, 0, 0]}
-			minPolarAngle={1.2}
-			maxPolarAngle={1.8}
-			minAzimuthAngle={-0.9}
-			maxAzimuthAngle={0.9}
+			target={[0, 0.38, 0]}
+			minPolarAngle={1.25}
+			maxPolarAngle={1.75}
+			minAzimuthAngle={-0.8}
+			maxAzimuthAngle={0.8}
 		/>
 	</T.PerspectiveCamera>
 
-	<T.AmbientLight intensity={isLight ? 1.2 : 1} />
-	<T.DirectionalLight position={[3, 4, 5]} intensity={2.2} />
-	<T.DirectionalLight position={[-3, 1, 2]} intensity={0.6} color="#dfe6ff" />
+	<!-- soft studio light: warm key from the front, cool fill, violet rim from behind -->
+	<T.HemisphereLight args={['#e9ecff', isLight ? '#d9d2ec' : '#2a1b55', isLight ? 1.6 : 1.3]} />
+	<T.DirectionalLight position={[2, 3, 4]} intensity={2.4} color="#fff1e4" />
+	<T.DirectionalLight position={[-3, 1.5, 2]} intensity={0.7} color="#c9d4ff" />
+	<T.DirectionalLight position={[-1.5, 2, -3]} intensity={isLight ? 1.5 : 2.6} color="#8b5cf6" />
+	<T.DirectionalLight position={[2, 0.5, -3]} intensity={isLight ? 0.8 : 1.4} color="#6d7cff" />
 
 	<T is={avatar.root} />
 {/if}
