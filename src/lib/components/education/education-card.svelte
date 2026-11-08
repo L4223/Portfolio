@@ -16,7 +16,7 @@
 
 	const { it }: { it: Education } = $props();
 
-	const exactDuration = computeExactDuration(it.period.from, it.period.to);
+	let exactDuration = $derived(computeExactDuration(it.period.from, it.period.to));
 
 	let from = $derived(getMonthAndYear(it.period.from));
 	let to = $derived(getMonthAndYear(it.period.to));

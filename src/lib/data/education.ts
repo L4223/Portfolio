@@ -57,8 +57,9 @@ const items: Array<LocalizedEducation> = [
                 shortDescription: { de: '', en: '' },
                 slug: 'gymnasium-altenholz',
                 subjects: [
-                        { de: 'Biologie', en: 'Biology' },
-                        { de: 'BYOD', en: 'BYOD' }
+                        { de: 'Leistungskurs Biologie', en: 'Advanced course Biology' },
+                        { de: 'Leistungskurs Chemie', en: 'Advanced course Chemistry' },
+                        { de: 'BYOD-Klasse', en: 'BYOD class' }
                 ]
         }
 ];
