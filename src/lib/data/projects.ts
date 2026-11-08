@@ -333,6 +333,7 @@ const items: Array<LocalizedProject> = [
 		description: {
 			de: `
 			<p class="lead">Space Journey ist eine interaktive 3D-Installation aus dem Modul Creative Technologies (Sommersemester 2023), entstanden zu dritt. Besucher:innen steuern mit ihrem Körper eine Kamera durchs Weltall – die Musik reagiert dynamisch auf ihre Bewegungen.</p>
+			${figure('space-journey/scene.jpg', 'Die Weltraum-Szene in Blender mit Planeten, Asteroidengürtel und Szenenkamera')}
 			<h2>So funktioniert es</h2>
 			<ul>
 				<li><strong>TouchDesigner</strong> liest die Body-Tracking-Daten der <strong>Kinect Azure</strong> (Hände, Oberkörper, Abstand) und normalisiert sie.</li>
@@ -340,11 +341,13 @@ const items: Array<LocalizedProject> = [
 				<li>Parallel steuert TouchDesigner über TDAbleton Parameter in <strong>Ableton Live</strong> – wer näher an die Kinect tritt, öffnet die Filter und macht die Effekte lauter.</li>
 				<li>Alle Sounds sind selbst mit Ableton-Instrumenten gebaut, ohne Samples.</li>
 			</ul>
+			${figure('space-journey/tracking-pipeline.jpg', 'TouchDesigner: Kinect-Bild → Tracking-Daten aller Gelenke → ausgewählte Werte für Hände und Abstand')}
 			<h2>Herausforderungen</h2>
 			<p>Die Kamera-Rotation per Quaternion aus reinen Positionsdaten zu steuern war schwer vorhersehbar, lieferte aber deutlich bessere Ergebnisse als Euler-Winkel. Und mit drei Programmen und zwei OSC-Plugins in der Kette war Fehlersuche oft Detektivarbeit.</p>
 			`,
 			en: `
 			<p class="lead">Space Journey is an interactive 3D installation from the Creative Technologies module (summer semester 2023), built by a team of three. Visitors steer a camera through space with their body – and the music reacts dynamically to their movement.</p>
+			${figure('space-journey/scene.jpg', 'The space scene in Blender with planets, asteroid belt and scene camera')}
 			<h2>How it works</h2>
 			<ul>
 				<li><strong>TouchDesigner</strong> reads body-tracking data from the <strong>Kinect Azure</strong> (hands, torso, distance) and normalises it.</li>
@@ -352,10 +355,21 @@ const items: Array<LocalizedProject> = [
 				<li>In parallel TouchDesigner drives parameters in <strong>Ableton Live</strong> through TDAbleton – stepping closer to the Kinect opens the filters and raises the effects.</li>
 				<li>All sounds were built from Ableton instruments, without samples.</li>
 			</ul>
+			${figure('space-journey/tracking-pipeline.jpg', 'TouchDesigner: Kinect image → tracking data for every joint → selected values for hands and distance')}
 			<h2>Challenges</h2>
 			<p>Driving camera rotation with quaternions from position data alone was hard to predict, but worked far better than Euler angles. And with three programs and two OSC plugins in the chain, debugging was often detective work.</p>
 			`
-		}
+		},
+		screenshots: [
+			{
+				src: img('space-journey/blender-osc.jpg'),
+				label: { de: 'NodeOSC in Blender: OSC-Adressen steuern Objekte', en: 'NodeOSC in Blender: OSC addresses drive objects' }
+			},
+			{
+				src: img('space-journey/ableton-parameter.jpg'),
+				label: { de: 'TDAbleton: Abstand steuert den Bass-Filter', en: 'TDAbleton: distance drives the bass filter' }
+			}
+		]
 	},
 	{
 		slug: 'js-pacman',
