@@ -20,7 +20,8 @@ const uiCopy: Record<string, LocalizedString> = {
         exactDuration: { de: 'Exakte Dauer', en: 'Exact duration' },
         screenshots: { de: 'Screenshots', en: 'Screenshots' },
         relatedItems: { de: 'Verwandte Einträge', en: 'Related items' },
-        download: { de: 'Download', en: 'Download' },
+        download: { de: 'PDF herunterladen', en: 'Download PDF' },
+        openNewTab: { de: 'In neuem Tab öffnen', en: 'Open in new tab' },
         language: { de: 'Sprache', en: 'Language' }
 };
 

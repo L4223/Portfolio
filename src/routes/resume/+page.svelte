@@ -7,10 +7,9 @@
 </script>
 
 <TitledPage title={$ResumeData.title}>
-	<div class="flex w-full justify-center">
-		<a href={$ResumeData.resume} download class="inline-flex">
-			<Button>{$UiText.download}</Button>
-		</a>
+	<div class="flex w-full flex-wrap justify-center gap-2">
+		<Button href={$ResumeData.resume} download="Lebenslauf_Lasse_Knodt.pdf">{$UiText.download}</Button>
+		<Button href={$ResumeData.resume} target="_blank" rel="noopener" variant="outline">{$UiText.openNewTab}</Button>
 	</div>
 
 	<div class="mx-auto w-full max-w-5xl">
