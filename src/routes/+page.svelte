@@ -11,9 +11,6 @@
         import { language } from '$lib/stores/language';
         import { href } from '$lib/utils';
         import { mode } from 'mode-watcher';
-        import RotatingModel, { type AvatarVariant } from '$lib/components/3d/RotatingModel.svelte';
-        import { page } from '$app/stores';
-        import { Canvas } from '@threlte/core';
 
         const greeting: LocalizedString = { de: 'Moin, ich bin Lasse!', en: "Hi, I'm Lasse!" };
         const role: LocalizedString = {
@@ -23,12 +20,10 @@
         const ctaProjects: LocalizedString = { de: 'Projekte ansehen', en: 'View projects' };
         const ctaResume: LocalizedString = { de: 'Lebenslauf', en: 'Resume' };
 
-        // ?avatar=xr|dev|original to compare the avatar versions
-        const variants: Array<AvatarVariant> = ['xr', 'dev', 'original'];
-        let avatar = $derived.by(() => {
-                const requested = $page.url.searchParams.get('avatar') as AvatarVariant | null;
-                return requested && variants.includes(requested) ? requested : 'xr';
-        });
+        const portraitAlt: LocalizedString = {
+                de: 'Lasse Knodt, stark weichgezeichnet',
+                en: 'Lasse Knodt, heavily blurred'
+        };
 </script>
 
 <Title title={$HomeData.title} />
@@ -81,31 +76,47 @@
 				<CarouselPrevious />
 			</Carousel> -->
 
-			<div class="canvas-container">
-                                {#key avatar}
-                                        <Canvas>
-                                                <RotatingModel variant={avatar} />
-                                        </Canvas>
-                                {/key}
-			</div>
+			<picture class="portrait">
+				<source srcset={href('/images/hero-blur.webp')} type="image/webp" />
+				<img
+					src={href('/images/hero-blur.png')}
+					alt={translate(portraitAlt, $language)}
+					width="556"
+					height="1266"
+					fetchpriority="high"
+				/>
+			</picture>
 		</div>
 	</div>
 </ResponsiveContainer>
 
 <style>
-	/* Styles for Canvas background */
-	.canvas-container {
-		/* position: absolute;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-		z-index: -1; 
-		display: flex;
-		justify-content: center;
-		align-items: center; */
-		width: 300px;
-		height: min(700px, 60vh);
+	/* Blurred cut-out portrait. The image already carries transparent padding,
+	   so the blur fades out completely instead of being clipped. */
+	.portrait {
+		display: block;
+		height: min(720px, 64vh);
+	}
+
+	.portrait img {
+		height: 100%;
+		width: auto;
+		user-select: none;
+		pointer-events: none;
+		animation: portrait-in 1.2s ease-out both;
+	}
+
+	@keyframes portrait-in {
+		from {
+			opacity: 0;
+			transform: translateY(12px);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.portrait img {
+			animation: none;
+		}
 	}
 
 	/* Ensures content remains in front of the canvas */
