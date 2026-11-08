@@ -37,9 +37,9 @@ const items: Array<LocalizedExperience> = [
                 contract: ContractType.Internship,
                 type: { de: 'XR Entwicklung', en: 'XR Development' },
                 location: { de: 'Altenholz, Schleswig-Holstein, Deutschland', en: 'Altenholz, Schleswig-Holstein, Germany' },
-                period: { from: new Date(2024, 11, 1), to: new Date(2025, 5, 30) },
+                period: { from: new Date(2024, 11, 1), to: new Date(2025, 6, 31) },
                 skillSlugs: ['webxr', 'webgl', 'reactjs', 'nodejs', 'mongo'],
-                name: { de: 'Bachelorand (Abschlussarbeit)', en: 'Bachelor Thesis Student' },
+                name: { de: 'Bachelor-Praktikum', en: 'Bachelor Internship' },
                 color: 'red',
                 links: [],
                 logo: Assets.Dataport,
@@ -128,7 +128,7 @@ const items: Array<LocalizedExperience> = [
         },
         {
                 slug: 'bayer-it-intern',
-                company: 'Bayer',
+                company: 'KVP Pharma+Veterinär Produkte GmbH',
                 description: {
                         de: 'Praktikum im Bereich IT mit Schwerpunkt technischer Support und IT-Infrastruktur.',
                         en: 'IT internship focused on technical support and IT infrastructure.'

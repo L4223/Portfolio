@@ -20,17 +20,17 @@ const items: Array<LocalizedEducation> = [
         {
                 degree: { de: 'Bachelor of Engineering', en: 'Bachelor of Engineering' },
                 description: {
-                        de: 'Abschluss als Bachelor of Engineering. Bachelorarbeit zu WebXR im Schulunterricht in Kooperation mit Dataport (SchoolXR).',
-                        en: 'Graduated as Bachelor of Engineering. Bachelor thesis on WebXR in school lessons in cooperation with Dataport (SchoolXR).'
+                        de: 'Abschluss als Bachelor of Engineering mit der Note 1,9. Bachelorarbeit zu WebXR im Schulunterricht in Kooperation mit Dataport (SchoolXR).',
+                        en: 'Graduated as Bachelor of Engineering with a grade of 1.9 (German scale). Bachelor thesis on WebXR in school lessons in cooperation with Dataport (SchoolXR).'
                 },
                 location: { de: 'Kiel, Deutschland', en: 'Kiel, Germany' },
                 logo: Assets.FH,
                 name: { de: 'Medieningenieur', en: 'Media Engineering' },
-                organization: { de: 'Fachhochschule Kiel', en: 'Kiel University of Applied Sciences' },
-                period: { from: new Date(2021, 0, 1), to: new Date(2025, 5, 1) },
+                organization: { de: 'HAW Kiel', en: 'Kiel University of Applied Sciences (HAW Kiel)' },
+                period: { from: new Date(2021, 8, 1), to: new Date(2025, 6, 31) },
                 shortDescription: {
-                        de: 'B.Eng. Medieningenieurwesen, Bachelorarbeit mit Dataport.',
-                        en: 'B.Eng. Media Engineering, bachelor thesis with Dataport.'
+                        de: 'B.Eng. Medieningenieur, Note 1,9, Bachelorarbeit mit Dataport.',
+                        en: 'B.Eng. Media Engineering, grade 1.9, bachelor thesis with Dataport.'
                 },
                 slug: 'fh-kiel',
                 subjects: [
@@ -53,12 +53,11 @@ const items: Array<LocalizedEducation> = [
                 logo: Assets.GYMAHZ,
                 name: { de: '', en: '' },
                 organization: { de: 'Gymnasium Altenholz', en: 'Gymnasium Altenholz' },
-                period: { from: new Date(2012, 0, 1), to: new Date(2020, 5, 1) },
+                period: { from: new Date(2012, 7, 1), to: new Date(2020, 3, 30) },
                 shortDescription: { de: '', en: '' },
                 slug: 'gymnasium-altenholz',
                 subjects: [
                         { de: 'Biologie', en: 'Biology' },
-                        { de: 'Chemie', en: 'Chemistry' },
                         { de: 'BYOD', en: 'BYOD' }
                 ]
         }

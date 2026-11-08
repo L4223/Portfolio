@@ -102,7 +102,7 @@ const items: Array<LocalizedProject> = [
 		},
 		description: {
 			de: `
-			<p class="lead">Meine Bachelorarbeit (B.Eng. Medieningenieurwesen, FH Kiel) in Kooperation mit Dataport. SchoolXR ist ein webbasiertes Werkzeug, mit dem Lehrkräfte 3D-Modelle mit Erklärungen und Aufgaben verbinden – und Schüler:innen diese direkt im Browser erkunden. Ohne App-Installation und ohne spezielle XR-Hardware, auf PC, Tablet und Smartphone.</p>
+			<p class="lead">Meine Bachelorarbeit (B.Eng. Medieningenieurwesen, HAW Kiel) in Kooperation mit Dataport. SchoolXR ist ein webbasiertes Werkzeug, mit dem Lehrkräfte 3D-Modelle mit Erklärungen und Aufgaben verbinden – und Schüler:innen diese direkt im Browser erkunden. Ohne App-Installation und ohne spezielle XR-Hardware, auf PC, Tablet und Smartphone.</p>
 			${figure('schoolxr/app-desktop.jpg', 'Startseite mit Rollenwahl')}
 			<h2>Das Problem</h2>
 			<p>3D und AR können Unterricht anschaulicher machen, scheitern in Schulen aber oft an Hardware, Installationen und Datenschutz. SchoolXR setzt deshalb komplett auf Web-Technologien und ist für die Einbindung in Lernmanagementsysteme wie <strong>Moodle</strong> und die <strong>dBildungscloud</strong> über <strong>LTI 1.3</strong> konzipiert.</p>
