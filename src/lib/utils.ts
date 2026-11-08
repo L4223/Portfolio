@@ -58,46 +58,37 @@ export const flyAndScale = (
 	};
 };
 
-const DAY = 24 * 60 * 60 * 1000;
-const WEEK = 7 * 24 * 60 * 60 * 1000;
-const MONTH = 30 * 24 * 60 * 60 * 1000;
-const YEAR = 365 * 24 * 60 * 60 * 1000;
 
-type Unit = 'year' | 'month' | 'week' | 'day';
+type Unit = 'year' | 'month';
 
 const unitNames: Record<Language, Record<Unit, [string, string]>> = {
-	de: { year: ['Jahr', 'Jahre'], month: ['Monat', 'Monate'], week: ['Woche', 'Wochen'], day: ['Tag', 'Tage'] },
-	en: { year: ['year', 'years'], month: ['month', 'months'], week: ['week', 'weeks'], day: ['day', 'days'] }
+	de: { year: ['Jahr', 'Jahre'], month: ['Monat', 'Monate'] },
+	en: { year: ['year', 'years'], month: ['month', 'months'] }
 };
 
 const formatUnit = (value: number, unit: Unit, lang: Language) =>
 	`${value} ${unitNames[lang][unit][value === 1 ? 0 : 1]}`;
 
 /**
- * Human readable duration, e.g. "1 Jahr und 3 Monate" / "1 year and 3 months".
- * Shows years and months; weeks and days only for periods shorter than a month.
+ * Human readable duration in calendar months, counted inclusively like LinkedIn
+ * (Dec 2024 - Jul 2025 = 8 months), e.g. "1 Jahr und 3 Monate" / "1 year and 3 months".
  */
 export function computeExactDuration(from: Date, to: Date = new Date()): string {
 	const lang = get(language);
 	const and = lang === 'de' ? 'und' : 'and';
 
-	const remaining = Math.max(0, to.getTime() - from.getTime());
+	const total = Math.max(
+		1,
+		(to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth()) + 1
+	);
 
-	const years = Math.trunc(remaining / YEAR);
-	const months = Math.trunc((remaining % YEAR) / MONTH);
+	const years = Math.trunc(total / 12);
+	const months = total % 12;
 
 	const display: Array<string> = [];
 
 	if (years > 0) display.push(formatUnit(years, 'year', lang));
 	if (months > 0) display.push(formatUnit(months, 'month', lang));
-
-	if (display.length === 0) {
-		const weeks = Math.trunc(remaining / WEEK);
-		const days = Math.trunc((remaining % WEEK) / DAY);
-
-		if (weeks > 0) display.push(formatUnit(weeks, 'week', lang));
-		else display.push(formatUnit(Math.max(1, days), 'day', lang));
-	}
 
 	return display.join(` ${and} `);
 }
