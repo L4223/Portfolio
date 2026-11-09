@@ -369,12 +369,13 @@ export const buildAvatar = (): Avatar => {
 	head.position.set(0, 0.79, 0.005);
 	torso.add(head);
 
-	// pose from the photo: arms spread a little, open palms turned forward
+	// relaxed: arms hang loosely at the sides, elbows barely bent,
+	// palms towards the thighs
 	for (const arm of arms) {
 		const s = arm.side;
-		arm.shoulder.rotation.set(0.04, 0, s * 0.3);
-		arm.elbow.rotation.set(-0.38, 0, s * 0.3);
-		arm.wrist.rotation.set(0.1, s * 1.2, s * 0.08);
+		arm.shoulder.rotation.set(0.03, 0, s * 0.07);
+		arm.elbow.rotation.set(-0.16, 0, s * -0.02);
+		arm.wrist.rotation.set(0, s * 0.15, s * -0.04);
 	}
 
 	const height = 1.86;

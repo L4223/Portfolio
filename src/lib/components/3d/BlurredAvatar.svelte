@@ -119,10 +119,10 @@
 	/>
 </T.PerspectiveCamera>
 
-<!-- soft, neutral studio light like in the photo -->
-<T.HemisphereLight args={['#ffffff', '#e6e3df', isLight ? 1.7 : 1.9]} />
-<T.DirectionalLight position={[2, 3, 4]} intensity={2.2} color="#fffaf4" />
-<T.DirectionalLight position={[-3, 2, 2]} intensity={0.9} color="#f4f6ff" />
-<T.DirectionalLight position={[0, 2.5, -4]} intensity={1.2} color="#ffffff" />
+<!-- dimmer light from the right, so the left side of the figure falls into shadow -->
+<T.HemisphereLight args={['#ffffff', '#d9d6d2', isLight ? 0.8 : 0.9]} />
+<T.DirectionalLight position={[3.5, 2.5, 2.5]} intensity={1.6} color="#fff6ee" />
+<T.DirectionalLight position={[-3, 1.5, 2]} intensity={0.12} color="#f4f6ff" />
+<T.DirectionalLight position={[1, 2.5, -4]} intensity={0.5} color="#ffffff" />
 
 <T is={avatar.root} />
