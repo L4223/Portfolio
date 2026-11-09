@@ -64,7 +64,7 @@
 			</div>
 		</div>
 		<!-- the 3D box has an empty margin for the blur; pull it towards the text -->
-		<div class="lg:-ml-16">
+		<div class="lg:-ml-11">
 			<!-- <Carousel bind:api class="w-[200px] md:ml-14" opts={{ loop: true }}>
 				<CarouselContent>
 					{#each HomeData.carousel as item}
@@ -98,8 +98,8 @@
 	   BlurredAvatar.svelte). The camera leaves a wide margin around the figure
 	   so the blur fades out completely instead of being cut at the edges. */
 	.avatar {
-		width: min(360px, 92vw);
-		height: min(800px, 74vh);
+		width: min(252px, 70vw);
+		height: min(560px, 52vh);
 		cursor: grab;
 		touch-action: pan-y;
 		animation: avatar-in 1.2s ease-out both;
@@ -107,7 +107,7 @@
 
 	@media (min-width: 1280px) {
 		.avatar {
-			width: 420px;
+			width: 294px;
 		}
 	}
 
