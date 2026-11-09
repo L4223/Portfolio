@@ -36,7 +36,7 @@
 <Title title={$HomeData.title} />
 <div class="flex w-full max-w-[1280px] flex-1 flex-col justify-center self-center">
         <div
-                class="flex flex-1 flex-col items-center justify-center gap-6 px-4 sm:px-8 lg:flex-row lg:justify-between lg:gap-10 lg:pl-6 xl:pl-10"
+                class="flex flex-1 flex-col items-center justify-center gap-6 px-4 sm:px-8 lg:flex-row lg:justify-center lg:gap-0 lg:pl-6 xl:pl-10"
 	>
                 <div
                         class="content-container flex min-w-0 flex-col items-center justify-center gap-4 text-center lg:items-start lg:text-left"
@@ -63,7 +63,8 @@
 				{/each}
 			</div>
 		</div>
-		<div>
+		<!-- the 3D box has an empty margin for the blur; pull it towards the text -->
+		<div class="lg:-ml-16">
 			<!-- <Carousel bind:api class="w-[200px] md:ml-14" opts={{ loop: true }}>
 				<CarouselContent>
 					{#each HomeData.carousel as item}
