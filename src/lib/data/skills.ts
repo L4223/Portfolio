@@ -184,6 +184,17 @@ const items = [
                 category: 'backend'
         }),
         defineSkill({
+                slug: 'flask',
+                color: 'gray',
+                description: {
+                        de: 'Flask ist ein schlankes Python-Web-Framework. In Silbernetz+ stellt es die REST-API für Personen, Matches und Verlauf bereit.',
+                        en: 'Flask is a lightweight Python web framework. In Silbernetz+ it serves the REST API for people, matches and history.'
+                },
+                logo: Assets.Flask,
+                name: { de: 'Flask', en: 'Flask' },
+                category: 'backend'
+        }),
+        defineSkill({
                 slug: 'flutter',
                 color: 'blue',
                 description: {

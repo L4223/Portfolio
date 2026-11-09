@@ -19,7 +19,7 @@ const Assets = {
 	Celery: asset('celery.svg'),
 	Django: asset('django.svg'),
 	FastApi: asset('fastapi'),
-	Flask: asset('flask.svg'),
+	Flask: asset('flask.svg', 'flask-dark.svg'),
 	Go: asset('go.svg'),
 	Kafka: asset('kafka.svg'),
 	Neo4j: asset('neo4j.svg'),
@@ -88,6 +88,7 @@ const Assets = {
 	WebXR: asset('webxr.png'),
 	FHWave: asset('fhwave.png'),
 	FlutDigital: asset('flutdigital.svg'),
+	Silbernetz: asset('silbernetz.svg'),
 	SpaceJourney: asset('spacejourney.svg'),
 	Pacman: asset('pacman.svg'),
 	Blender: asset('blender.svg')
