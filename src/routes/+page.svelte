@@ -46,7 +46,7 @@
                         <Muted className="max-w-[560px]">{$HomeData.hero.description}</Muted>
                         <div class="flex flex-row flex-wrap justify-center gap-2 lg:justify-start">
                                 <a href={href('/projects')}><Button>{translate(ctaProjects, $language)}</Button></a>
-                                <a href={href('/resume')}><Button variant="outline">{translate(ctaResume, $language)}</Button></a>
+                                <a href={href('/lebenslauf')}><Button variant="outline">{translate(ctaResume, $language)}</Button></a>
                         </div>
                         <div class="flex flex-row gap-1">
                                 {#each $HomeData.hero.links as item}
