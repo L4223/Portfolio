@@ -21,7 +21,9 @@ const C = {
 	skinShade: '#d9a487',
 	hair: '#5a4231',
 	brow: '#4a3527',
-	eye: '#3a2c26',
+	eyeWhite: '#f7f4f0',
+	iris: '#5f7d96',
+	pupil: '#1c1c22',
 	lips: '#c98b7c',
 	tee: '#151518',
 	jeans: '#1e1e23',
@@ -211,14 +213,14 @@ const buildLegs = (color: string) => {
 		);
 		legs.add(leg);
 
-		const shoe = group([side * 0.12, 0, 0.04]);
+		const shoe = group([side * 0.12, 0, 0.065]);
 		shoe.rotation.y = side * 0.18;
-		shoe.add(mesh(ball(0.07), C.shoe, { position: [0, 0.05, 0], scale: [0.85, 0.6, 1.72] }));
-		shoe.add(mesh(ball(0.07), C.sole, { position: [0, 0.018, 0], scale: [0.9, 0.22, 1.8] }));
+		shoe.add(mesh(ball(0.07), C.shoe, { position: [0, 0.05, 0], scale: [0.85, 0.6, 2.25] }));
+		shoe.add(mesh(ball(0.07), C.sole, { position: [0, 0.018, 0], scale: [0.9, 0.22, 2.35] }));
 		for (let i = 0; i < 3; i++) {
 			shoe.add(
 				mesh(new THREE.BoxGeometry(0.004, 0.05, 0.012), C.stripe, {
-					position: [side * 0.059, 0.05, 0.005 + i * 0.022],
+					position: [side * 0.059, 0.05, 0.0 + i * 0.026],
 					rotation: [0.5, 0, 0]
 				})
 			);
@@ -255,30 +257,72 @@ const buildTorso = () => {
 	return torso;
 };
 
+const SKULL: Array<[number, number]> = [
+	[0, -0.135],
+	[0.045, -0.13],
+	[0.082, -0.095],
+	[0.1, -0.035],
+	[0.106, 0.04],
+	[0.1, 0.1],
+	[0.076, 0.145],
+	[0.035, 0.165],
+	[0, 0.168]
+];
+const SKULL_DEPTH = 1.08;
+
+/**
+ * Hair as one shell that follows the skull and ends on a continuous hairline
+ * around the head: high at the forehead, just above the ears, lower at the back.
+ */
+const buildHairShell = () => {
+	const thickness = 0.01;
+	const profile = new THREE.SplineCurve(SKULL.map(([r, y]) => new THREE.Vector2(r, y))).getPoints(80);
+	const radiusAt = (y: number) => {
+		// skull radius at height y (upper half of the profile)
+		for (let i = profile.length - 1; i > 0; i--) {
+			const a = profile[i];
+			const b = profile[i - 1];
+			if (y <= a.y && y >= b.y) {
+				const t = (y - b.y) / (a.y - b.y || 1);
+				return b.x + (a.x - b.x) * t;
+			}
+		}
+		return profile[0].x;
+	};
+
+	const outer = profile
+		.filter((p) => p.y > -0.07)
+		.map((p) => new THREE.Vector2(Math.max(0, p.x) + thickness, p.y + (p.x < 0.02 ? thickness : 0)));
+	const geometry = new THREE.LatheGeometry(outer, 48);
+
+	// hairline height around the head (angle 0 = front)
+	const hairline = (angle: number) => {
+		const front = (Math.cos(angle) + 1) / 2;
+		return -0.045 + 0.15 * Math.pow(front, 1.8);
+	};
+
+	const pos = geometry.attributes.position;
+	for (let i = 0; i < pos.count; i++) {
+		const x = pos.getX(i);
+		const y = pos.getY(i);
+		const z = pos.getZ(i);
+		const angle = Math.atan2(x, z);
+		const line = hairline(angle);
+		if (y < line) {
+			// fold everything below the hairline onto it, hugging the skull
+			const r = radiusAt(line) + thickness * 0.4;
+			pos.setXYZ(i, Math.sin(angle) * r, line, Math.cos(angle) * r);
+		}
+	}
+	geometry.computeVertexNormals();
+	return geometry;
+};
+
 const buildHead = () => {
 	const head = new THREE.Group();
 
 	// skull and jaw, a bit deeper than wide
-	head.add(
-		mesh(
-			lathe(
-				[
-					[0, -0.135],
-					[0.045, -0.13],
-					[0.082, -0.095],
-					[0.1, -0.035],
-					[0.106, 0.04],
-					[0.1, 0.1],
-					[0.076, 0.145],
-					[0.035, 0.165],
-					[0, 0.168]
-				],
-				9
-			),
-			C.skin,
-			{ scale: [1, 1, 1.08] }
-		)
-	);
+	head.add(mesh(lathe(SKULL), C.skin, { scale: [1, 1, SKULL_DEPTH] }));
 
 	// ears that stick out a little
 	for (const side of [-1, 1]) {
@@ -294,51 +338,38 @@ const buildHead = () => {
 	// face: kept simple but strong enough to survive the blur as soft shadows
 	head.add(mesh(ball(0.02), C.skinShade, { position: [0, -0.02, 0.106], scale: [0.75, 1.2, 0.95] }));
 	for (const side of [-1, 1]) {
+		// big comic eye: white, blue-grey iris, pupil and a highlight
+		const eye = group([side * 0.041, 0.02, 0.098]);
+		eye.rotation.y = side * 0.32;
+		eye.add(mesh(ball(0.029), C.eyeWhite, { scale: [0.82, 1.08, 0.42] }));
+		eye.add(mesh(ball(0.017), C.iris, { position: [side * -0.002, -0.003, 0.009], scale: [0.95, 1.05, 0.4] }));
+		eye.add(mesh(ball(0.0095), C.pupil, { position: [side * -0.002, -0.003, 0.0135], scale: [1, 1.05, 0.4] }));
+		eye.add(mesh(ball(0.0045), C.eyeWhite, { position: [side * -0.008, 0.007, 0.017] }));
+		head.add(eye);
+
 		head.add(
-			mesh(ball(0.017), C.eye, {
-				position: [side * 0.038, 0.022, 0.094],
-				scale: [1.15, 0.8, 0.6]
-			})
-		);
-		head.add(
-			mesh(capsule(0.007, 0.03), C.brow, {
-				position: [side * 0.039, 0.052, 0.1],
-				rotation: [0, side * -0.3, Math.PI / 2 + side * 0.12]
+			mesh(capsule(0.0075, 0.032), C.brow, {
+				position: [side * 0.042, 0.064, 0.101],
+				rotation: [0, side * -0.32, Math.PI / 2 + side * 0.1]
 			})
 		);
 	}
 	head.add(mesh(capsule(0.007, 0.03), C.lips, { position: [0, -0.068, 0.096], rotation: [0, 0, Math.PI / 2] }));
 
-	// short hair at the sides and back, sitting just outside the skull so it
-	// never sinks in above the ears (front left open for the face)
+	// hair: one continuous shell, plus a little volume on top at the front
+	head.add(mesh(buildHairShell(), C.hair, { scale: [1, 1, SKULL_DEPTH], double: true }));
 	head.add(
-		mesh(
-			new THREE.SphereGeometry(0.114, 40, 16, Math.PI * 0.82, Math.PI * 1.36, Math.PI * 0.18, Math.PI * 0.37),
-			C.hair,
-			{ position: [0, 0.02, -0.006], scale: [1.02, 1.04, 1.12], double: true }
-		)
-	);
-
-	// fuller top pushed up at the front
-	head.add(
-		mesh(new THREE.SphereGeometry(0.119, 40, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), C.hair, {
-			position: [0, 0.03, -0.012],
-			rotation: [-0.28, 0, 0],
-			scale: [1.03, 1.08, 1.1]
-		})
-	);
-	head.add(
-		mesh(ball(0.08), C.hair, {
-			position: [0, 0.13, 0.025],
+		mesh(ball(0.075), C.hair, {
+			position: [0, 0.14, 0.03],
 			rotation: [0.35, 0, 0],
-			scale: [1.2, 0.55, 1.12]
+			scale: [1.15, 0.5, 1.1]
 		})
 	);
 	head.add(
-		mesh(ball(0.055), C.hair, {
-			position: [0, 0.148, 0.07],
+		mesh(ball(0.05), C.hair, {
+			position: [0, 0.15, 0.075],
 			rotation: [0.6, 0, 0],
-			scale: [1.45, 0.55, 0.85]
+			scale: [1.5, 0.5, 0.85]
 		})
 	);
 
