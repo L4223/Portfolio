@@ -197,6 +197,72 @@ const items: Array<LocalizedProject> = [
 		}
 	},
 	{
+		slug: 'silbernetz-plus',
+		color: '#47277D',
+		name: { de: 'Silbernetz+ Matching-System', en: 'Silbernetz+ matching system' },
+		type: { de: 'Studienprojekt · Full-Stack', en: 'University project · Full stack' },
+		logo: Assets.Silbernetz,
+		period: { from: new Date(2024, 3, 22), to: new Date(2024, 8, 16) },
+		links: [],
+		skillSlugs: ['svelte', 'ts', 'tailwind', 'python', 'flask', 'mongo', 'docker', 'figma'],
+		shortDescription: {
+			de: 'Webanwendung, die Vermittler:innen von Silbernetz hilft, ältere Menschen und ehrenamtliche Telefonpartner:innen passend zusammenzubringen.',
+			en: 'Web app that helps Silbernetz coordinators pair older people with volunteer phone friends.'
+		},
+		description: {
+			de: `
+			<p class="lead">Silbernetz+ ist im Modul „Innovative Konzepte“ an der FH Kiel im Team entstanden. Silbernetz e.&nbsp;V. vermittelt ehrenamtliche Telefonfreundschaften an ältere Menschen, die sich einsam fühlen. Bisher lagen die Daten dafür verstreut in Excel-Tabellen, und jedes Match entstand von Hand. Wir haben dafür ein Matching-System gebaut: Neue Personen werden strukturiert aufgenommen, das System schlägt passende Partner:innen vor, und Matches lassen sich anlegen, verfolgen und bewerten.</p>
+			<p><em>Alle Namen und Daten auf den Screenshots sind erfunden. Die Bilder stammen aus einer lokalen Demo ohne echte Personendaten.</em></p>
+			${figure('silbernetz/dashboard.jpg', 'Dashboard mit Schnellzugriffen und Statistiken')}
+			<h2>Funktionen</h2>
+			<ul>
+				<li><strong>Erste Aufnahme:</strong> ein kurzes Formular für den ersten Anruf. Später wird das Profil um Interessen, Erreichbarkeit, Wünsche und Abneigungen ergänzt.</li>
+				<li><strong>Matching-Vorschläge:</strong> Das Backend vergleicht Interessen, Eigenschaften, Bundesland, Erreichbarkeit und Sprechweise und zeigt die besten Kandidat:innen mit Prozentwert und Begründung. Wünsche rücken Vorschläge nach vorn, Abneigungen nach hinten.</li>
+				<li><strong>Regeln aus der Praxis:</strong> Ältere Menschen haben immer nur eine Telefonfreundschaft, Ehrenamtliche dagegen bis zu einer selbst gewählten Höchstzahl.</li>
+				<li><strong>Personendatenbank, aktive Matches und Verlauf:</strong> durchsuchbare Tabellen mit Filtern, Auflösen eines Matches mit Bewertung und ein Protokoll aller Aktionen.</li>
+			</ul>
+			${figure('silbernetz/match-vorschlaege.jpg', 'Matching-Vorschläge mit Übereinstimmung in Prozent')}
+			<h2>Mein Anteil</h2>
+			<p>Ich habe vor allem am SvelteKit-Frontend und an der Anbindung an die Flask-API gearbeitet: die Seiten für Personendaten, Matches und Matchverlauf, Toasts und Bestätigungsdialoge, die Eingaben für Interessen und Erreichbarkeit sowie den Schutz der Routen. Im Backend habe ich Token-Login, Passwort-Hashing und den Betrieb mit Gunicorn und Docker Compose eingerichtet.</p>
+			${figure('silbernetz/person-profil.jpg', 'Profil mit Interessen, Eigenschaften und Erreichbarkeit')}
+			<h2>Vorgehen</h2>
+			<p>Gearbeitet haben wir in Sprints und in engem Austausch mit Silbernetz. Gespräche mit der Matcherin zeigten, wie viel beim Vermitteln auf Erfahrung und Bauchgefühl beruht. Deshalb macht das System nur Vorschläge, und die Entscheidung bleibt beim Menschen. Für den Algorithmus haben wir Interessen in Kategorien und Spezialisierungen gebündelt, als Vektoren kodiert und ihre Ähnlichkeit berechnet. Das UI entstand zuerst als Figma-Prototyp, nach einem Zwischenschritt mit Webflow dann in SvelteKit.</p>
+			<h2>Tech-Stack</h2>
+			<p>SvelteKit, TypeScript, Tailwind CSS, Flowbite Svelte · Python, Flask, Gunicorn, JWT · MongoDB · Docker Compose, nginx · Figma.</p>
+			`,
+			en: `
+			<p class="lead">Silbernetz+ was built by our team in the “Innovative Concepts” module at Kiel University of Applied Sciences. Silbernetz e.&nbsp;V. arranges volunteer phone friendships for older people who feel lonely. Until then, the data lived in scattered Excel sheets and every match was made by hand. We built a matching system for it: new people are recorded in a structured way, the system suggests suitable partners, and matches can be created, tracked and rated.</p>
+			<p><em>All names and data in the screenshots are made up. The images come from a local demo without any real personal data.</em></p>
+			${figure('silbernetz/dashboard.jpg', 'Dashboard with shortcuts and statistics')}
+			<h2>Features</h2>
+			<ul>
+				<li><strong>First intake:</strong> a short form for the first call. The profile is later completed with interests, availability, wishes and dislikes.</li>
+				<li><strong>Match suggestions:</strong> The backend compares interests, traits, state, availability and speaking style and shows the best candidates with a percentage and the reasons. Wishes move suggestions up, dislikes move them down.</li>
+				<li><strong>Real-world rules:</strong> Older people only ever have one phone friendship, while volunteers can take on up to a number they choose.</li>
+				<li><strong>People database, active matches and history:</strong> searchable tables with filters, ending a match with a rating, and a log of every action.</li>
+			</ul>
+			${figure('silbernetz/match-vorschlaege.jpg', 'Match suggestions with a percentage score')}
+			<h2>My part</h2>
+			<p>I mainly worked on the SvelteKit frontend and its connection to the Flask API: the pages for personal data, matches and match history, toasts and confirmation dialogs, the inputs for interests and availability, and route protection. On the backend I set up token login, password hashing and running the app with Gunicorn and Docker Compose.</p>
+			${figure('silbernetz/person-profil.jpg', 'Profile with interests, traits and availability')}
+			<h2>Process</h2>
+			<p>We worked in sprints and in close contact with Silbernetz. Talking to their matcher showed how much of matching relies on experience and gut feeling. That is why the system only makes suggestions and the decision stays with a person. For the algorithm we grouped interests into categories and specialisations, encoded them as vectors and computed their similarity. The UI started as a Figma prototype and, after an interim step with Webflow, was built in SvelteKit.</p>
+			<h2>Tech stack</h2>
+			<p>SvelteKit, TypeScript, Tailwind CSS, Flowbite Svelte · Python, Flask, Gunicorn, JWT · MongoDB · Docker Compose, nginx · Figma.</p>
+			`
+		},
+		screenshots: [
+			{ src: img('silbernetz/login.jpg'), label: { de: 'Anmeldung für Vermittler:innen', en: 'Sign-in for coordinators' } },
+			{ src: img('silbernetz/erste-aufnahme.jpg'), label: { de: 'Erste Aufnahme beim ersten Anruf', en: 'First intake during the first call' } },
+			{ src: img('silbernetz/personen.jpg'), label: { de: 'Personendatenbank mit Filtern', en: 'People database with filters' } },
+			{ src: img('silbernetz/person-detail.jpg'), label: { de: 'Personendaten ansehen', en: 'Viewing a person' } },
+			{ src: img('silbernetz/neuzugaenge.jpg'), label: { de: 'Unbearbeitete Neuzugänge', en: 'New intakes to process' } },
+			{ src: img('silbernetz/aktive-matches.jpg'), label: { de: 'Aktive Matches', en: 'Active matches' } },
+			{ src: img('silbernetz/match-anzeigen.jpg'), label: { de: 'Aktuelle und frühere Matches einer Person', en: 'Current and past matches of a person' } },
+			{ src: img('silbernetz/verlauf.jpg'), label: { de: 'Verlauf aller Aktionen', en: 'History of all actions' } }
+		]
+	},
+	{
 		slug: 'big-speech-vr',
 		color: '#4A90E2',
 		name: { de: 'Big Speech VR', en: 'Big Speech VR' },
