@@ -309,12 +309,22 @@ const buildHead = () => {
 	}
 	head.add(mesh(capsule(0.007, 0.03), C.lips, { position: [0, -0.068, 0.096], rotation: [0, 0, Math.PI / 2] }));
 
-	// short, darker sides; fuller top pushed up at the front
+	// short hair at the sides and back, sitting just outside the skull so it
+	// never sinks in above the ears (front left open for the face)
 	head.add(
-		mesh(new THREE.SphereGeometry(0.117, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), C.hair, {
-			position: [0, 0.028, -0.012],
-			rotation: [-0.3, 0, 0],
-			scale: [1, 1.08, 1.08]
+		mesh(
+			new THREE.SphereGeometry(0.114, 40, 16, Math.PI * 0.82, Math.PI * 1.36, Math.PI * 0.18, Math.PI * 0.37),
+			C.hair,
+			{ position: [0, 0.02, -0.006], scale: [1.02, 1.04, 1.12], double: true }
+		)
+	);
+
+	// fuller top pushed up at the front
+	head.add(
+		mesh(new THREE.SphereGeometry(0.119, 40, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), C.hair, {
+			position: [0, 0.03, -0.012],
+			rotation: [-0.28, 0, 0],
+			scale: [1.03, 1.08, 1.1]
 		})
 	);
 	head.add(
@@ -373,8 +383,8 @@ export const buildAvatar = (): Avatar => {
 	// palms towards the thighs
 	for (const arm of arms) {
 		const s = arm.side;
-		arm.shoulder.rotation.set(0.03, 0, s * 0.07);
-		arm.elbow.rotation.set(-0.16, 0, s * -0.02);
+		arm.shoulder.rotation.set(0.03, 0, s * 0.15);
+		arm.elbow.rotation.set(-0.16, 0, s * 0.04);
 		arm.wrist.rotation.set(0, s * 0.15, s * -0.04);
 	}
 

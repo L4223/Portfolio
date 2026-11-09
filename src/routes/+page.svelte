@@ -2,7 +2,6 @@
 	import Title from '$lib/components/common/title/title.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
         import Icon from '$lib/components/ui/icon/icon.svelte';
-        import ResponsiveContainer from '$lib/components/ui/responsive-container/responsive-container.svelte';
         import { Tooltip, TooltipContent, TooltipTrigger } from '$lib/components/ui/tooltip';
         import H1 from '$lib/components/ui/typography/h1.svelte';
         import Muted from '$lib/components/ui/typography/muted.svelte';
@@ -35,17 +34,17 @@
 </script>
 
 <Title title={$HomeData.title} />
-<ResponsiveContainer className="flex flex-col justify-center flex-1">
+<div class="flex w-full max-w-[1280px] flex-1 flex-col justify-center self-center">
         <div
-                class="flex flex-1 flex-col items-center justify-center px-14 md:flex-row md:justify-between"
+                class="flex flex-1 flex-col items-center justify-center gap-6 px-4 sm:px-8 lg:flex-row lg:justify-between lg:gap-10 lg:pl-6 xl:pl-10"
 	>
                 <div
-                        class="content-container flex flex-col items-center justify-center gap-4 text-center md:items-start md:text-left"
+                        class="content-container flex min-w-0 flex-col items-center justify-center gap-4 text-center lg:items-start lg:text-left"
                 >
-                        <H1>{translate(greeting, $language)}</H1>
-                        <p class="text-lg font-medium">{translate(role, $language)}</p>
+                        <H1 className="lg:whitespace-nowrap">{translate(greeting, $language)}</H1>
+                        <p class="text-lg font-medium lg:whitespace-nowrap">{translate(role, $language)}</p>
                         <Muted className="max-w-[560px]">{$HomeData.hero.description}</Muted>
-                        <div class="flex flex-row flex-wrap justify-center gap-2 md:justify-start">
+                        <div class="flex flex-row flex-wrap justify-center gap-2 lg:justify-start">
                                 <a href={href('/projects')}><Button>{translate(ctaProjects, $language)}</Button></a>
                                 <a href={href('/resume')}><Button variant="outline">{translate(ctaResume, $language)}</Button></a>
                         </div>
@@ -91,14 +90,14 @@
 			</div>
 		</div>
 	</div>
-</ResponsiveContainer>
+</div>
 
 <style>
 	/* Real-time 3D figure, blurred in WebGL like an out-of-focus photo (see
 	   BlurredAvatar.svelte). The camera leaves a wide margin around the figure
 	   so the blur fades out completely instead of being cut at the edges. */
 	.avatar {
-		width: min(380px, 92vw);
+		width: min(360px, 92vw);
 		height: min(800px, 74vh);
 		cursor: grab;
 		touch-action: pan-y;
@@ -107,7 +106,7 @@
 
 	@media (min-width: 1280px) {
 		.avatar {
-			width: 460px;
+			width: 420px;
 		}
 	}
 
@@ -131,7 +130,6 @@
 	.content-container {
 		position: relative;
 		z-index: 1;
-		padding: 20px;
-		text-align: center;
+		padding: 20px 0;
 	}
 </style>
