@@ -16,7 +16,7 @@ const items: Array<NavBarItem> = [
         { title: { de: 'Projekte', en: 'Projects' }, icon: 'i-carbon-cube', href: '/projects' },
         { title: { de: 'Erfahrung', en: 'Experience' }, icon: 'i-carbon-development', href: '/experience' },
         { title: { de: 'Bildung', en: 'Education' }, icon: 'i-carbon-education', href: '/education' },
-        { title: { de: 'Lebenslauf', en: 'Resume' }, icon: 'i-carbon-document', href: '/resume' }
+        { title: { de: 'Lebenslauf', en: 'Resume' }, icon: 'i-carbon-document', href: '/lebenslauf' }
 ];
 
 const NavBarData = derived(language, ($language) => ({
