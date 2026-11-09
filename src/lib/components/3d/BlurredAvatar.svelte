@@ -11,7 +11,7 @@
 	import { createBlurPasses } from './blur-pass';
 
 	/** blur strength (Gaussian sigma) in CSS pixels */
-	const BLUR = 9.5;
+	const BLUR = 6.7;
 
 	let isLight = $derived($mode === 'light');
 
