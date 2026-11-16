@@ -60,6 +60,17 @@ const items: Array<LocalizedProject> = [
 				<li><strong>Admin-Bereich:</strong> Blog, Referenzen und Kontaktanfragen werden über Firebase Auth und Firestore gepflegt, abgesichert durch Firestore-Regeln.</li>
 				<li><strong>Barrierefreiheit &amp; Performance:</strong> Skip-Link, sichtbarer Tastaturfokus, geprüfte Kontraste, selbst gehostete Schrift und Inhalte, die schon vor dem Laden von JavaScript sichtbar sind.</li>
 			</ul>
+			<h2>Der KI-Chat im Einsatz</h2>
+			${figure('flut-digital/ki-chat.jpg', 'Beispielchat: Der Assistent beantwortet eine Kundenfrage – eine echte Antwort von openai/gpt-oss-120b über Groq')}
+			<p>Unten rechts öffnet sich ein Chat-Assistent, der Fragen zu den Leistungen der Agentur beantwortet. Im Beispiel fragt jemand, ob Flut.digital einen KI-Chatbot für einen Online-Shop bauen kann. Der Assistent antwortet passend zum Leistungsangebot und verweist für alles Konkrete an den direkten Kontakt.</p>
+			<ul>
+				<li><strong>Wissen aus dem Code:</strong> Der System-Prompt wird aus denselben typisierten Daten erzeugt, aus denen auch die Website besteht: Leistungen, Kontaktdaten und Ablauf. Ändert sich eine Leistung, weiß der Chat es automatisch.</li>
+				<li><strong>Klare Leitplanken:</strong> Der Prompt verbietet erfundene Preise, Termine und Zusagen. Bei einer Preisfrage nennt der Assistent deshalb keine Zahl, sondern bietet ein Angebot an. Antworten sind auf kurze, gut lesbare Absätze begrenzt.</li>
+				<li><strong>Sicher auf dem Server:</strong> Die Frage geht über eine Next.js Server Action an die Groq-API. Der API-Key bleibt auf dem Server, und die IP-Adresse der Besucher:innen wird nicht weitergegeben.</li>
+				<li><strong>Schnell und günstig:</strong> Groq liefert die Antwort des offenen Modells <code>openai/gpt-oss-120b</code> in etwa einer Sekunde. Das Nachdenken des Modells ist auf „low“ gestellt und wird nicht mitgeschickt. Die Begrüßung ist fest hinterlegt und verbraucht kein Kontingent.</li>
+				<li><strong>Robust:</strong> Ist das Free-Tier-Limit erreicht oder Groq nicht erreichbar, erscheint ein freundlicher Hinweis mit Kontaktmöglichkeit statt einer Fehlermeldung.</li>
+				<li><strong>Zugänglich:</strong> Der Chat ist ein Dialog mit Fokusführung, schließt mit Escape und weist auf die KI-Nutzung und den Datenschutz hin.</li>
+			</ul>
 			${figure('flut-digital/leistung-ki.jpg', 'Leistungsseite mit animierter Illustration, Ablauf und FAQ')}
 			<h2>Was ich dabei geübt habe</h2>
 			<p>Den kompletten Weg von der Marke bis zur fertigen Seite: Name, Logo und Farbsystem, Informationsarchitektur, Texte, Komponenten mit shadcn/ui und Tailwind, Case Studies mit Geräte-Mockups – und am Ende ein Audit auf Zugänglichkeit und Performance.</p>
@@ -77,6 +88,17 @@ const items: Array<LocalizedProject> = [
 				<li><strong>Content as data:</strong> services, references and tech stack are typed data in the codebase. The service pages also generate structured data (JSON-LD) from it.</li>
 				<li><strong>Admin area:</strong> blog posts, references and contact requests are managed via Firebase Auth and Firestore, protected by Firestore rules.</li>
 				<li><strong>Accessibility &amp; performance:</strong> skip link, visible keyboard focus, checked contrast, self-hosted fonts and content that is visible before JavaScript loads.</li>
+			</ul>
+			<h2>The AI chat in action</h2>
+			${figure('flut-digital/ki-chat.jpg', 'Example chat: the assistant answers a customer question – a real response from openai/gpt-oss-120b via Groq')}
+			<p>A chat assistant opens in the bottom right and answers questions about the agency’s services. In the example, someone asks whether Flut.digital can build an AI chatbot for their online shop. The assistant answers in line with the services on offer and points to direct contact for anything specific.</p>
+			<ul>
+				<li><strong>Knowledge from the codebase:</strong> the system prompt is generated from the same typed data the website is built from: services, contact details and process. When a service changes, the chat knows automatically.</li>
+				<li><strong>Clear guardrails:</strong> the prompt forbids made-up prices, dates and promises. Asked about prices, the assistant therefore gives no figure and offers a quote instead. Answers are limited to short, readable paragraphs.</li>
+				<li><strong>Secure on the server:</strong> the question goes to the Groq API through a Next.js Server Action. The API key stays on the server, and visitors’ IP addresses are not passed on.</li>
+				<li><strong>Fast and cheap:</strong> Groq returns the open model <code>openai/gpt-oss-120b</code>’s answer in about a second. The model’s reasoning is set to “low” and is not sent back. The greeting is static and uses no quota.</li>
+				<li><strong>Robust:</strong> if the free-tier limit is reached or Groq is unavailable, a friendly note with contact options appears instead of an error.</li>
+				<li><strong>Accessible:</strong> the chat is a dialog with focus management, closes with Escape and discloses the AI use and the privacy notice.</li>
 			</ul>
 			${figure('flut-digital/leistung-ki.jpg', 'Service page with animated illustration, process and FAQ')}
 			<h2>What I practised</h2>
