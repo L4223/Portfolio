@@ -31,8 +31,17 @@ const github = (repo: string): LocalizedLink => ({
 	label: { de: 'GitHub', en: 'GitHub' }
 });
 
+// Screenshots open in full size on click.
 const figure = (path: string, alt: string) =>
-	`<figure><img src="${img(path)}" alt="${alt}" loading="lazy"><figcaption>${alt}</figcaption></figure>`;
+	`<figure><a href="${img(path)}" target="_blank" rel="noopener"><img src="${img(path)}" alt="${alt}" loading="lazy"></a><figcaption>${alt}</figcaption></figure>`;
+
+/** Two or more figures side by side on wider screens. */
+const gallery = (...figures: Array<string>) => `<div class="gallery">${figures.join('')}</div>`;
+
+/** Highlighted box, e.g. for a live link. */
+const callout = (html: string) => `<div class="callout">${html}</div>`;
+
+const live = (url: string, label: LocalizedString): LocalizedLink => ({ to: url, label });
 
 const items: Array<LocalizedProject> = [
 	{
@@ -42,7 +51,10 @@ const items: Array<LocalizedProject> = [
 		type: { de: 'Übungsprojekt · Web & Brand', en: 'Practice project · Web & brand' },
 		logo: Assets.FlutDigital,
 		period: { from: new Date(2025, 8, 29), to: new Date(2025, 9, 31) },
-		links: [github('Flut.digital')],
+		links: [
+			live('https://flut-digital.onrender.com', { de: 'Live-Seite', en: 'Live site' }),
+			github('Flut.digital')
+		],
 		skillSlugs: ['nextjs', 'reactjs', 'ts', 'tailwind', 'threejs', 'firebase', 'ai'],
 		shortDescription: {
 			de: 'Marke und Website für eine fiktive Digitalagentur – mit Three.js-Szene, KI-Chat und Admin-Bereich.',
@@ -51,59 +63,65 @@ const items: Array<LocalizedProject> = [
 		description: {
 			de: `
 			<p class="lead">Flut.digital ist mein Übungsprojekt für Webentwicklung und Brand Design: Ich habe eine fiktive Digitalagentur für Webdesign, KI-Integrationen und 3D/AR-Erlebnisse erfunden und für sie Marke und Website von Grund auf gebaut. Agentur und Inhalte sind ausgedacht, die Technik ist echt.</p>
+			${callout('<a href="https://flut-digital.onrender.com" target="_blank" rel="noopener">→ Live-Seite öffnen</a><span>flut-digital.onrender.com – inklusive funktionierendem KI-Chat</span>')}
 			${figure('flut-digital/home.jpg', 'Startseite mit animierter Wellen- und Punktwolken-Szene')}
 			<h2>Highlights</h2>
 			<ul>
 				<li><strong>Three.js-Hintergrund:</strong> eine Wellen-Szene im Hero und eine Punktwolke, deren Sterne um den Mauszeiger aufleuchten. Beides mit eigenem Shader, pausiert im Hintergrund-Tab und respektiert <code>prefers-reduced-motion</code>.</li>
-				<li><strong>KI-Chat-Assistent:</strong> beantwortet Fragen zu Leistungen und Ablauf über die Groq-API (<code>openai/gpt-oss-120b</code>). Der Key bleibt über Server Actions auf dem Server, Rate-Limits werden freundlich abgefangen.</li>
+				<li><strong>KI-Chat-Assistent:</strong> beantwortet Fragen zu Leistungen und Ablauf über die Groq-API. Mehr dazu im nächsten Abschnitt.</li>
 				<li><strong>Inhalte als Daten:</strong> Leistungen, Referenzen und Tech-Stack liegen typisiert im Code. Die Leistungsseiten erzeugen daraus auch strukturierte Daten (JSON-LD).</li>
 				<li><strong>Admin-Bereich:</strong> Blog, Referenzen und Kontaktanfragen werden über Firebase Auth und Firestore gepflegt, abgesichert durch Firestore-Regeln.</li>
 				<li><strong>Barrierefreiheit &amp; Performance:</strong> Skip-Link, sichtbarer Tastaturfokus, geprüfte Kontraste, selbst gehostete Schrift und Inhalte, die schon vor dem Laden von JavaScript sichtbar sind.</li>
 			</ul>
 			<h2>Der KI-Chat im Einsatz</h2>
-			${figure('flut-digital/ki-chat.jpg', 'Beispielchat: Der Assistent beantwortet eine Kundenfrage – eine echte Antwort von openai/gpt-oss-120b über Groq')}
 			<p>Unten rechts öffnet sich ein Chat-Assistent, der Fragen zu den Leistungen der Agentur beantwortet. Im Beispiel fragt jemand, ob Flut.digital einen KI-Chatbot für einen Online-Shop bauen kann. Der Assistent antwortet passend zum Leistungsangebot und verweist für alles Konkrete an den direkten Kontakt.</p>
+			${figure('flut-digital/ki-chat.jpg', 'Beispielchat – eine echte Antwort von openai/gpt-oss-120b über Groq')}
 			<ul>
-				<li><strong>Wissen aus dem Code:</strong> Der System-Prompt wird aus denselben typisierten Daten erzeugt, aus denen auch die Website besteht: Leistungen, Kontaktdaten und Ablauf. Ändert sich eine Leistung, weiß der Chat es automatisch.</li>
-				<li><strong>Klare Leitplanken:</strong> Der Prompt verbietet erfundene Preise, Termine und Zusagen. Bei einer Preisfrage nennt der Assistent deshalb keine Zahl, sondern bietet ein Angebot an. Antworten sind auf kurze, gut lesbare Absätze begrenzt.</li>
-				<li><strong>Sicher auf dem Server:</strong> Die Frage geht über eine Next.js Server Action an die Groq-API. Der API-Key bleibt auf dem Server, und die IP-Adresse der Besucher:innen wird nicht weitergegeben.</li>
-				<li><strong>Schnell und günstig:</strong> Groq liefert die Antwort des offenen Modells <code>openai/gpt-oss-120b</code> in etwa einer Sekunde. Das Nachdenken des Modells ist auf „low“ gestellt und wird nicht mitgeschickt. Die Begrüßung ist fest hinterlegt und verbraucht kein Kontingent.</li>
-				<li><strong>Robust:</strong> Ist das Free-Tier-Limit erreicht oder Groq nicht erreichbar, erscheint ein freundlicher Hinweis mit Kontaktmöglichkeit statt einer Fehlermeldung.</li>
-				<li><strong>Zugänglich:</strong> Der Chat ist ein Dialog mit Fokusführung, schließt mit Escape und weist auf die KI-Nutzung und den Datenschutz hin.</li>
+				<li><strong>Wissen aus dem Code:</strong> Der System-Prompt entsteht aus denselben Daten wie die Website: Leistungen, Kontaktdaten und Ablauf. Ändert sich eine Leistung, weiß der Chat es automatisch.</li>
+				<li><strong>Klare Leitplanken:</strong> Erfundene Preise, Termine und Zusagen sind tabu. Bei einer Preisfrage bietet der Assistent ein Angebot an statt einer Zahl.</li>
+				<li><strong>Sicher auf dem Server:</strong> Die Frage geht über eine Next.js Server Action an Groq. Der API-Key bleibt auf dem Server, IP-Adressen werden nicht weitergegeben.</li>
+				<li><strong>Schnell und sparsam:</strong> Groq antwortet mit <code>openai/gpt-oss-120b</code> in etwa einer Sekunde. Die Begrüßung ist fest hinterlegt und verbraucht kein Kontingent.</li>
+				<li><strong>Robust:</strong> Ist das Free-Tier-Limit erreicht oder Groq nicht erreichbar, erscheint ein freundlicher Hinweis mit Kontaktmöglichkeit.</li>
+				<li><strong>Zugänglich:</strong> Dialog mit Fokusführung, schließt mit Escape und weist auf KI-Nutzung und Datenschutz hin.</li>
 			</ul>
-			${figure('flut-digital/leistung-ki.jpg', 'Leistungsseite mit animierter Illustration, Ablauf und FAQ')}
 			<h2>Was ich dabei geübt habe</h2>
 			<p>Den kompletten Weg von der Marke bis zur fertigen Seite: Name, Logo und Farbsystem, Informationsarchitektur, Texte, Komponenten mit shadcn/ui und Tailwind, Case Studies mit Geräte-Mockups – und am Ende ein Audit auf Zugänglichkeit und Performance.</p>
-			${figure('flut-digital/referenzen.jpg', 'Case Studies mit Desktop- und Mobil-Mockups')}
+			${gallery(
+				figure('flut-digital/leistung-ki.jpg', 'Leistungsseite mit animierter Illustration, Ablauf und FAQ'),
+				figure('flut-digital/referenzen.jpg', 'Case Studies mit Desktop- und Mobil-Mockups')
+			)}
 			<h2>Tech-Stack</h2>
 			<p>Next.js 15 (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion, Three.js, Firebase (Firestore, Auth), Groq API.</p>
 			`,
 			en: `
 			<p class="lead">Flut.digital is my practice project for web development and brand design: I invented a fictional digital agency for web design, AI integrations and 3D/AR experiences and built its brand and website from scratch. The agency and its content are made up, the tech is real.</p>
+			${callout('<a href="https://flut-digital.onrender.com" target="_blank" rel="noopener">→ Open the live site</a><span>flut-digital.onrender.com – including the working AI chat</span>')}
 			${figure('flut-digital/home.jpg', 'Home page with animated wave and point-cloud scene')}
 			<h2>Highlights</h2>
 			<ul>
 				<li><strong>Three.js background:</strong> a wave scene in the hero and a point cloud whose stars light up around the cursor. Both use custom shaders, pause in background tabs and respect <code>prefers-reduced-motion</code>.</li>
-				<li><strong>AI chat assistant:</strong> answers questions about services and process via the Groq API (<code>openai/gpt-oss-120b</code>). The key stays on the server through Server Actions, and rate limits are handled gracefully.</li>
+				<li><strong>AI chat assistant:</strong> answers questions about services and process via the Groq API. More on that in the next section.</li>
 				<li><strong>Content as data:</strong> services, references and tech stack are typed data in the codebase. The service pages also generate structured data (JSON-LD) from it.</li>
 				<li><strong>Admin area:</strong> blog posts, references and contact requests are managed via Firebase Auth and Firestore, protected by Firestore rules.</li>
 				<li><strong>Accessibility &amp; performance:</strong> skip link, visible keyboard focus, checked contrast, self-hosted fonts and content that is visible before JavaScript loads.</li>
 			</ul>
 			<h2>The AI chat in action</h2>
-			${figure('flut-digital/ki-chat.jpg', 'Example chat: the assistant answers a customer question – a real response from openai/gpt-oss-120b via Groq')}
 			<p>A chat assistant opens in the bottom right and answers questions about the agency’s services. In the example, someone asks whether Flut.digital can build an AI chatbot for their online shop. The assistant answers in line with the services on offer and points to direct contact for anything specific.</p>
+			${figure('flut-digital/ki-chat.jpg', 'Example chat – a real response from openai/gpt-oss-120b via Groq')}
 			<ul>
-				<li><strong>Knowledge from the codebase:</strong> the system prompt is generated from the same typed data the website is built from: services, contact details and process. When a service changes, the chat knows automatically.</li>
-				<li><strong>Clear guardrails:</strong> the prompt forbids made-up prices, dates and promises. Asked about prices, the assistant therefore gives no figure and offers a quote instead. Answers are limited to short, readable paragraphs.</li>
-				<li><strong>Secure on the server:</strong> the question goes to the Groq API through a Next.js Server Action. The API key stays on the server, and visitors’ IP addresses are not passed on.</li>
-				<li><strong>Fast and cheap:</strong> Groq returns the open model <code>openai/gpt-oss-120b</code>’s answer in about a second. The model’s reasoning is set to “low” and is not sent back. The greeting is static and uses no quota.</li>
-				<li><strong>Robust:</strong> if the free-tier limit is reached or Groq is unavailable, a friendly note with contact options appears instead of an error.</li>
-				<li><strong>Accessible:</strong> the chat is a dialog with focus management, closes with Escape and discloses the AI use and the privacy notice.</li>
+				<li><strong>Knowledge from the codebase:</strong> the system prompt is built from the same data as the website: services, contact details and process. When a service changes, the chat knows automatically.</li>
+				<li><strong>Clear guardrails:</strong> made-up prices, dates and promises are off limits. Asked about prices, the assistant offers a quote instead of a figure.</li>
+				<li><strong>Secure on the server:</strong> the question goes to Groq through a Next.js Server Action. The API key stays on the server and IP addresses are not passed on.</li>
+				<li><strong>Fast and frugal:</strong> Groq answers with <code>openai/gpt-oss-120b</code> in about a second. The greeting is static and uses no quota.</li>
+				<li><strong>Robust:</strong> if the free-tier limit is reached or Groq is unavailable, a friendly note with contact options appears.</li>
+				<li><strong>Accessible:</strong> a dialog with focus management that closes with Escape and discloses the AI use and privacy notice.</li>
 			</ul>
-			${figure('flut-digital/leistung-ki.jpg', 'Service page with animated illustration, process and FAQ')}
 			<h2>What I practised</h2>
 			<p>The whole path from brand to finished site: name, logo and colour system, information architecture, copy, components with shadcn/ui and Tailwind, case studies with device mock-ups – and finally an accessibility and performance audit.</p>
-			${figure('flut-digital/referenzen.jpg', 'Case studies with desktop and mobile mock-ups')}
+			${gallery(
+				figure('flut-digital/leistung-ki.jpg', 'Service page with animated illustration, process and FAQ'),
+				figure('flut-digital/referenzen.jpg', 'Case studies with desktop and mobile mock-ups')
+			)}
 			<h2>Tech stack</h2>
 			<p>Next.js 15 (App Router), React, TypeScript, Tailwind CSS, shadcn/ui, Framer Motion, Three.js, Firebase (Firestore, Auth), Groq API.</p>
 			`
@@ -479,10 +497,53 @@ const items: Array<LocalizedProject> = [
 	}
 ];
 
+/** Split "A, B (x, y) · C." into items, ignoring separators inside parentheses. */
+const splitStack = (text: string): Array<string> => {
+	const items: Array<string> = [];
+	let depth = 0;
+	let current = '';
+	const flush = () => {
+		const item = current.trim().replace(/\.$/, '');
+		if (item) items.push(item);
+		current = '';
+	};
+	for (let i = 0; i < text.length; i++) {
+		const ch = text[i];
+		if (ch === '(') depth++;
+		if (ch === ')') depth--;
+		if (depth === 0 && (ch === ',' || ch === '·')) {
+			flush();
+			continue;
+		}
+		current += ch;
+	}
+	flush();
+	return items;
+};
+
+/**
+ * Presentation tweaks shared by all case studies:
+ * - "<strong>Label:</strong>" list items lose the colon (they render as cards),
+ * - the paragraph under a "Tech-Stack" heading becomes a row of chips.
+ */
+const enhance = (html: string): string =>
+	html
+		.replace(
+			/<li><strong>([^<]*?):<\/strong>\s*([a-zäöü]?)/g,
+			(_, label: string, first: string) => `<li><strong>${label}</strong> ${first.toUpperCase()}`
+		)
+		.replace(
+			/(<h2>Tech[- ]?[Ss]tack<\/h2>\s*)<p>([\s\S]*?)<\/p>/g,
+			(_, heading: string, text: string) =>
+				`${heading}<ul class="stack">${splitStack(text)
+					.map((it) => `<li>${it}</li>`)
+					.join('')}</ul>`
+		);
+
 const mapProject = (item: LocalizedProject, lang: Language): Project => ({
 	...item,
 	name: translate(item.name, lang),
-	description: translate(item.description, lang),
+	description: enhance(translate(item.description, lang)),
 	shortDescription: translate(item.shortDescription, lang),
 	type: translate(item.type, lang),
 	links: item.links.map((link) => ({ ...link, label: translate(link.label, lang) })),
